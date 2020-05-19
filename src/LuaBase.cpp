@@ -30,7 +30,7 @@
 #include "OmicronTK/Lua/LuaBase.hpp"
 
 namespace OmicronTK {
-namespace OTKLUA {
+namespace Lua {
 
 }
 }

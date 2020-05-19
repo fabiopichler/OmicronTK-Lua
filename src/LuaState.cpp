@@ -33,7 +33,7 @@
 #include <iostream>
 
 namespace OmicronTK {
-namespace OTKLUA {
+namespace Lua {
 
 void forEach(lua_State *L, const LuaRegVector &functions);
 

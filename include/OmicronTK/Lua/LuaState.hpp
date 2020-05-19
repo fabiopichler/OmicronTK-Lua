@@ -37,7 +37,7 @@
 typedef struct lua_State lua_State;
 
 namespace OmicronTK {
-namespace OTKLUA {
+namespace Lua {
 
 using LuaCFunction = int (*)(lua_State *);
 

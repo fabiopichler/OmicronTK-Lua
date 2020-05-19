@@ -35,7 +35,7 @@
 #include <vector>
 
 namespace OmicronTK {
-namespace OTKLUA {
+namespace Lua {
 
 class OTKLUA_EXPORT LuaBase
 {
