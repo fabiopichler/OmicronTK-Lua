@@ -1,11 +1,11 @@
 /*******************************************************************************
-  OmicronTK+Lua
+  OmicronTK_lua
 
   Author: Fábio Pichler
   Website: http://fabiopichler.net
   License: The MIT License
 
-  Copyright 2018-2019, Fábio Pichler
+  Copyright 2018-2020, Fábio Pichler
 
   Permission is hereby granted, free of charge, to any person obtaining
   a copy of this software and associated documentation files (the "Software"),
@@ -29,11 +29,55 @@
 
 #pragma once
 
-// Versão do produto
-#define OTKLUA_PRODUCT_VERSION 0,1,0,0
+#include "global.h"
 
-// Versão do Produto em string
-#define OTKLUA_PRODUCT_VERSION_STR "0.1.0"
+#include <string>
+#include <vector>
 
-// Versão do arquivo
-#define OTKLUA_FILE_VERSION "0.1.0"
+typedef struct lua_State lua_State;
+
+namespace OmicronTK {
+namespace lua {
+
+using LuaCFunction = int (*)(lua_State *);
+
+struct LuaReg
+{
+    const char *name;
+    LuaCFunction func;
+};
+
+using LuaRegVector = std::vector<LuaReg>;
+
+class OTKLUA_EXPORT LuaState
+{
+public:
+    LuaState();
+    ~LuaState();
+
+    inline lua_State *state() const { return m_state; }
+
+    bool loadFile(const std::string &fileName);
+    bool execute(const std::string &script);
+
+    void push(const std::string &name, const std::string &value);
+    void push(const std::string &name, int value);
+    void push(const std::string &name, void *value);
+    void push(const std::string &name, LuaCFunction value);
+
+    int addDirPath(const std::string &path);
+
+    void reg(const std::string &name, const LuaRegVector &functions, const LuaRegVector &methods = LuaRegVector());
+
+    template<typename LuaClass>
+    inline void requiref()
+    {
+        LuaClass::requiref(this);
+    }
+
+private:
+    lua_State *m_state;
+};
+
+}
+}

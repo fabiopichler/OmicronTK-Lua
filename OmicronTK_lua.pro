@@ -1,11 +1,11 @@
 #*******************************************************************************
-#  OmicronTK+Lua
+#  OmicronTK_lua
 #
 #  Author: Fábio Pichler
 #  Website: http://fabiopichler.net
 #  License: The MIT License
 #
-#  Copyright 2018-2019, Fábio Pichler
+#  Copyright 2018-2020, Fábio Pichler
 #
 #  Permission is hereby granted, free of charge, to any person obtaining
 #  a copy of this software and associated documentation files (the "Software"),
@@ -29,7 +29,7 @@
 
 include(./project.pri)
 
-TARGET = OmicronTK+Lua$${DEBUG}
+TARGET = OmicronTK_lua$${DEBUG}
 DEFINES += OTKLUA_BUILD_CORE_LIB
 
 unix:LIBS += -ldl -llua
@@ -53,13 +53,13 @@ contains(QMAKE_HOST.arch, x86_64) {
 
 }
 
-win32:RC_FILE = src/core.rc
+win32:RC_FILE = src/lua.rc
 
 HEADERS += \
-    include/OmicronTK/Lua/global.h \
-    include/OmicronTK/Lua/LuaBase.hpp \
-    include/OmicronTK/Lua/LuaState.hpp \
-    include/OmicronTK/Lua/version.h
+    include/OmicronTK/lua/global.h \
+    include/OmicronTK/lua/LuaBase.hpp \
+    include/OmicronTK/lua/LuaState.hpp \
+    include/OmicronTK/lua/version.h
 
 SOURCES += \
     src/LuaBase.cpp \

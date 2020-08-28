@@ -1,11 +1,11 @@
 /*******************************************************************************
-  OmicronTK+Lua
+  OmicronTK_lua
 
   Author: Fábio Pichler
   Website: http://fabiopichler.net
   License: The MIT License
 
-  Copyright 2018-2019, Fábio Pichler
+  Copyright 2018-2020, Fábio Pichler
 
   Permission is hereby granted, free of charge, to any person obtaining
   a copy of this software and associated documentation files (the "Software"),
@@ -31,52 +31,27 @@
 
 #include "global.h"
 
-#include <string>
+#include <lua.hpp>
 #include <vector>
 
-typedef struct lua_State lua_State;
-
 namespace OmicronTK {
-namespace Lua {
+namespace lua {
 
-using LuaCFunction = int (*)(lua_State *);
-
-struct LuaReg
-{
-    const char *name;
-    LuaCFunction func;
-};
-
-using LuaRegVector = std::vector<LuaReg>;
-
-class OTKLUA_EXPORT LuaState
+class OTKLUA_EXPORT LuaBase
 {
 public:
-    LuaState();
-    ~LuaState();
-
-    inline lua_State *state() const { return m_state; }
-
-    bool loadFile(const std::string &fileName);
-    bool execute(const std::string &script);
-
-    void push(const std::string &name, const std::string &value);
-    void push(const std::string &name, int value);
-    void push(const std::string &name, void *value);
-    void push(const std::string &name, LuaCFunction value);
-
-    int addDirPath(const std::string &path);
-
-    void reg(const std::string &name, const LuaRegVector &functions, const LuaRegVector &methods = LuaRegVector());
-
     template<typename LuaClass>
-    inline void requiref()
+    static inline void newUserData(lua_State *L, const char *tableName, void *userdata)
     {
-        LuaClass::requiref(this);
+        *static_cast<void **>(lua_newuserdata(L, sizeof(LuaClass *))) = userdata;
+        luaL_setmetatable(L, tableName);
     }
 
-private:
-    lua_State *m_state;
+    template<typename LuaClass>
+    static inline LuaClass *checkUserData(lua_State *L, int ud, const char *tableName)
+    {
+        return *static_cast<LuaClass **>(luaL_checkudata(L, ud, tableName));
+    }
 };
 
 }

@@ -1,11 +1,11 @@
 /*******************************************************************************
-  OmicronTK+Lua
+  OmicronTK_lua
 
   Author: Fábio Pichler
   Website: http://fabiopichler.net
   License: The MIT License
 
-  Copyright 2018-2019, Fábio Pichler
+  Copyright 2018-2020, Fábio Pichler
 
   Permission is hereby granted, free of charge, to any person obtaining
   a copy of this software and associated documentation files (the "Software"),
@@ -28,7 +28,7 @@
 *******************************************************************************/
 
 #include <windows.h>
-#include "../include/OmicronTK/Lua/version.h"
+#include "../include/OmicronTK/lua/version.h"
 
 1 VERSIONINFO
  FILEVERSION OTKLUA_PRODUCT_VERSION
@@ -48,12 +48,12 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
 			VALUE "CompanyName",       "Fábio Pichler"
-            VALUE "FileDescription",   "Omicron ToolKit + Lua"
+            VALUE "FileDescription",   "Omicron ToolKit - Lua"
             VALUE "FileVersion",       OTKLUA_FILE_VERSION
             VALUE "InternalName",      ORIGINAL_FILENAME
-            VALUE "LegalCopyright",    "Copyright © 2018-2019, Fábio Pichler"
+            VALUE "LegalCopyright",    "Copyright © 2018-2020, Fábio Pichler"
             VALUE "OriginalFilename",  ORIGINAL_FILENAME ".dll"
-            VALUE "ProductName",       "OmicronTK+Lua"
+            VALUE "ProductName",       "OmicronTK_lua"
             VALUE "ProductVersion",    OTKLUA_PRODUCT_VERSION_STR
         END
     END

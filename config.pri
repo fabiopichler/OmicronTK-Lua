@@ -1,11 +1,11 @@
 #*******************************************************************************
-#  OmicronTK+Lua
+#  OmicronTK_lua
 #
 #  Author: Fábio Pichler
 #  Website: http://fabiopichler.net
 #  License: The MIT License
 #
-#  Copyright 2018-2019, Fábio Pichler
+#  Copyright 2018-2020, Fábio Pichler
 #
 #  Permission is hereby granted, free of charge, to any person obtaining
 #  a copy of this software and associated documentation files (the "Software"),

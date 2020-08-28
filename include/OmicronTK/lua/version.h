@@ -1,11 +1,11 @@
 /*******************************************************************************
-  OmicronTK+Lua
+  OmicronTK_lua
 
   Author: Fábio Pichler
   Website: http://fabiopichler.net
   License: The MIT License
 
-  Copyright 2018-2019, Fábio Pichler
+  Copyright 2018-2020, Fábio Pichler
 
   Permission is hereby granted, free of charge, to any person obtaining
   a copy of this software and associated documentation files (the "Software"),
@@ -29,30 +29,11 @@
 
 #pragma once
 
-#include "global.h"
+// Versão do produto
+#define OTKLUA_PRODUCT_VERSION 0,2,0,0
 
-#include <lua.hpp>
-#include <vector>
+// Versão do Produto em string
+#define OTKLUA_PRODUCT_VERSION_STR "0.2.0"
 
-namespace OmicronTK {
-namespace Lua {
-
-class OTKLUA_EXPORT LuaBase
-{
-public:
-    template<typename LuaClass>
-    static inline void newUserData(lua_State *L, const char *tableName, void *userdata)
-    {
-        *static_cast<void **>(lua_newuserdata(L, sizeof(LuaClass *))) = userdata;
-        luaL_setmetatable(L, tableName);
-    }
-
-    template<typename LuaClass>
-    static inline LuaClass *checkUserData(lua_State *L, int ud, const char *tableName)
-    {
-        return *static_cast<LuaClass **>(luaL_checkudata(L, ud, tableName));
-    }
-};
-
-}
-}
+// Versão do arquivo
+#define OTKLUA_FILE_VERSION "0.2.0"

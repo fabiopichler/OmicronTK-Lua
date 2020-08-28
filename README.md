@@ -1,2 +1,2 @@
-# OmicronTK+Lua
-O OmicronTK+Lua (Omicron Toolkit + Lua) é uma biblioteca *wrapper* simples para liblua, escrito em C++ 11.
+# OmicronTK_lua
+O OmicronTK_lua (Omicron Toolkit - Lua) é uma biblioteca *wrapper* simples para liblua, escrito em C++ 14.
