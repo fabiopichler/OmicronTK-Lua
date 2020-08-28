@@ -30,4 +30,3 @@
 #define ORIGINAL_FILENAME "OmicronTK_lua"
 
 #include ".\\resource.rc"
-

@@ -1,2 +1,5 @@
-*.pro.user*
-config.local.pri
+.idea
+*.txt.user*
+.directory
+/cmake-build*
+/build
