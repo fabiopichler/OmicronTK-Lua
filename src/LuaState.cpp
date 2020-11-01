@@ -35,6 +35,7 @@
 namespace OmicronTK {
 namespace lua {
 
+void pushLuaValue(lua_State *state, const LuaValue &value);
 void forEach(lua_State *L, const LuaRegVector &functions);
 
 LuaState::LuaState()
@@ -71,28 +72,20 @@ bool LuaState::execute(const std::string &script)
     return false;
 }
 
-void LuaState::push(const std::string &name, const std::string &value)
+void LuaState::push(const std::string &name, const LuaValue &value)
 {
-    lua_pushstring(m_state, value.c_str());
+    pushLuaValue(m_state, value);
     lua_setglobal(m_state, name.c_str());
 }
 
-void LuaState::push(const std::string &name, int value)
+void LuaState::call(const std::string &name, const LuaValueVector &values)
 {
-    lua_pushinteger(m_state, value);
-    lua_setglobal(m_state, name.c_str());
-}
+    lua_getglobal(m_state, name.c_str());
 
-void LuaState::push(const std::string &name, void *value)
-{
-    lua_pushlightuserdata(m_state, value);
-    lua_setglobal(m_state, name.c_str());
-}
+    for (const auto &value : values)
+        pushLuaValue(m_state, value);
 
-void LuaState::push(const std::string &name, LuaCFunction value)
-{
-    lua_pushcfunction(m_state, value);
-    lua_setglobal(m_state, name.c_str());
+    lua_pcall(m_state, values.size(), 0, 0);
 }
 
 int LuaState::addDirPath(const std::string &path)
@@ -129,6 +122,42 @@ void LuaState::reg(const std::string &name, const LuaRegVector &functions, const
     }
 
     lua_pop(m_state, 1);
+}
+
+void pushLuaValue(lua_State *state, const LuaValue &value)
+{
+    switch (value.type()) {
+        case LuaValueType::Undefined:
+        break;
+
+        case LuaValueType::Nil:
+            lua_pushnil(state);
+        break;
+
+        case LuaValueType::Number:
+            lua_pushnumber(state, value.number_value());
+        break;
+
+        case LuaValueType::Integer:
+            lua_pushinteger(state, value.integer_value());
+        break;
+
+        case LuaValueType::String:
+            lua_pushstring(state, value.string_value().c_str());
+        break;
+
+        case LuaValueType::Closure:
+            lua_pushcfunction(state, value.closure_value());
+        break;
+
+        case LuaValueType::Boolean:
+            lua_pushboolean(state, value.boolean_value());
+        break;
+
+        case LuaValueType::Lightuserdata:
+            lua_pushlightuserdata(state, value.lightuserdata_value());
+        break;
+    }
 }
 
 void forEach(lua_State *L, const LuaRegVector &functions)

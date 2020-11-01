@@ -32,22 +32,12 @@
 #include "global.h"
 
 #include <string>
-#include <vector>
 
-typedef struct lua_State lua_State;
+#include "OmicronTK/lua/defines.hpp"
+#include "OmicronTK/lua/LuaValue.hpp"
 
 namespace OmicronTK {
 namespace lua {
-
-using LuaCFunction = int (*)(lua_State *);
-
-struct LuaReg
-{
-    const char *name;
-    LuaCFunction func;
-};
-
-using LuaRegVector = std::vector<LuaReg>;
 
 class OTKLUA_EXPORT LuaState
 {
@@ -60,14 +50,12 @@ public:
     bool loadFile(const std::string &fileName);
     bool execute(const std::string &script);
 
-    void push(const std::string &name, const std::string &value);
-    void push(const std::string &name, int value);
-    void push(const std::string &name, void *value);
-    void push(const std::string &name, LuaCFunction value);
+    void push(const std::string &name, const LuaValue &value);
+    void call(const std::string &name, const LuaValueVector &values = {});
 
     int addDirPath(const std::string &path);
 
-    void reg(const std::string &name, const LuaRegVector &functions, const LuaRegVector &methods = LuaRegVector());
+    void reg(const std::string &name, const LuaRegVector &functions, const LuaRegVector &methods = {});
 
     template<typename LuaClass>
     inline void requiref()

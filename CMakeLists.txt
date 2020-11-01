@@ -38,9 +38,14 @@ add_definitions(-DOTKLUA_BUILD_CORE_LIB)
 
 set(SRC_FILES
     include/OmicronTK/lua/global.h
+    include/OmicronTK/lua/defines.hpp
     include/OmicronTK/lua/LuaBase.hpp
     include/OmicronTK/lua/LuaState.hpp
+    include/OmicronTK/lua/LuaValue.hpp
     include/OmicronTK/lua/version.h
+    src/private/LuaValueBase.cpp
+    src/private/LuaValueBase.hpp
+    src/LuaValue.cpp
     src/LuaBase.cpp
     src/LuaState.cpp)
 
