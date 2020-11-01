@@ -17,9 +17,13 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/lib)
 option(USE_CUSTOM_LUA "Use a custom Lua build" OFF)
 option(USE_LUAJIT "Use LuaJIT" ON)
 
-if(USE_CUSTOM_LUA)
+if(EXISTS "${CMAKE_SOURCE_DIR}/.env.cmake")
+    include("${CMAKE_SOURCE_DIR}/.env.cmake")
+
+elseif(USE_CUSTOM_LUA)
     set(LUA_INCLUDE_DIR "" CACHE STRING "Lua include directory")
     set(LUA_LIBRARIES "" CACHE STRING "Lua library")
+
 else()
     if(USE_LUAJIT)
         find_package(LuaJIT 2.1 REQUIRED)
