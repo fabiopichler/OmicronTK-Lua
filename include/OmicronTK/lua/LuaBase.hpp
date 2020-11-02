@@ -52,6 +52,24 @@ public:
     {
         return *static_cast<LuaClass **>(luaL_checkudata(L, ud, tableName));
     }
+
+    template<typename LuaClass>
+    static inline int __gc(lua_State *L, const char *tableName)
+    {
+        LuaClass *userdata = checkUserData<LuaClass>(L, 1, tableName);
+
+        if (userdata)
+        {
+            delete userdata;
+        }
+        else
+        {
+            lua_pushstring(L, "C++ object garbage failure");
+            lua_error(L);
+        }
+
+        return 0;
+    }
 };
 
 }

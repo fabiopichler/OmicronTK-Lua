@@ -35,6 +35,7 @@
 namespace OmicronTK {
 namespace lua {
 
+LuaValue toLuaValue(lua_State *state, LuaValueType type, uint32_t idx);
 void pushLuaValue(lua_State *state, const LuaValue &value);
 void forEach(lua_State *L, const LuaRegVector &functions);
 
@@ -72,10 +73,17 @@ bool LuaState::execute(const std::string &script)
     return false;
 }
 
-void LuaState::push(const std::string &name, const LuaValue &value)
+void LuaState::setGlobal(const std::string &name, const LuaValue &value)
 {
     pushLuaValue(m_state, value);
     lua_setglobal(m_state, name.c_str());
+}
+
+LuaValue LuaState::getGlobal(const std::string &name, LuaValueType type)
+{
+    lua_getglobal(m_state, name.c_str());
+
+    return toLuaValue(m_state, type, 1);
 }
 
 void LuaState::call(const std::string &name, const LuaValueVector &values)
@@ -100,37 +108,7 @@ LuaValueVector LuaState::call(const std::string &name, const LuaValueVector &val
     LuaValueVector valueVector;
 
     for (size_t idx = 1; idx <= returns.size(); ++idx)
-    {
-        switch (returns[idx - 1]) {
-            case LuaValueType::Undefined:
-            case LuaValueType::Nil:
-            break;
-
-            case LuaValueType::Number:
-                valueVector.push_back(double(lua_tonumber(m_state, idx)));
-            break;
-
-            case LuaValueType::Integer:
-                valueVector.push_back(int(lua_tointeger(m_state, idx)));
-            break;
-
-            case LuaValueType::String:
-                valueVector.push_back(lua_tolstring(m_state, idx, nullptr));
-            break;
-
-            case LuaValueType::CFunction:
-                valueVector.push_back(lua_tocfunction(m_state, idx));
-            break;
-
-            case LuaValueType::Boolean:
-                valueVector.push_back(bool(lua_toboolean(m_state, idx)));
-            break;
-
-            case LuaValueType::Lightuserdata:
-                valueVector.push_back(lua_touserdata(m_state, idx));
-            break;
-        }
-    }
+        valueVector.push_back(toLuaValue(m_state, returns[idx - 1], idx));
 
     return valueVector;
 }
@@ -169,6 +147,35 @@ void LuaState::reg(const std::string &name, const LuaRegVector &functions, const
     }
 
     lua_pop(m_state, 1);
+}
+
+LuaValue toLuaValue(lua_State *state, LuaValueType type, uint32_t idx)
+{
+    switch (type) {
+        case LuaValueType::Undefined:
+        case LuaValueType::Nil:
+        break;
+
+        case LuaValueType::Number:
+            return double(lua_tonumber(state, idx));
+
+        case LuaValueType::Integer:
+            return int(lua_tointeger(state, idx));
+
+        case LuaValueType::String:
+            return lua_tolstring(state, idx, nullptr);
+
+        case LuaValueType::CFunction:
+            return lua_tocfunction(state, idx);
+
+        case LuaValueType::Boolean:
+            return bool(lua_toboolean(state, idx));
+
+        case LuaValueType::Lightuserdata:
+            return lua_touserdata(state, idx);
+    }
+
+    return LuaValue(0);
 }
 
 void pushLuaValue(lua_State *state, const LuaValue &value)

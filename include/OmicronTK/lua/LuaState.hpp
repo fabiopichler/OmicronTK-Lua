@@ -50,7 +50,8 @@ public:
     bool loadFile(const std::string &fileName);
     bool execute(const std::string &script);
 
-    void push(const std::string &name, const LuaValue &value);
+    void setGlobal(const std::string &name, const LuaValue &value);
+    LuaValue getGlobal(const std::string &name, LuaValueType type);
     void call(const std::string &name, const LuaValueVector &values = {});
     LuaValueVector call(const std::string &name, const LuaValueVector &values, std::vector<LuaValueType> returns);
 
