@@ -45,6 +45,8 @@ set(SRC_FILES
     include/OmicronTK/lua/version.h
     src/private/LuaValueBase.cpp
     src/private/LuaValueBase.hpp
+    src/private/helpers.cpp
+    src/private/helpers.hpp
     src/LuaValue.cpp
     src/LuaBase.cpp
     src/LuaState.cpp)
