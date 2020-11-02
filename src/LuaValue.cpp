@@ -32,8 +32,8 @@ public:
 class LuaClosure : public Value<LuaCFunction>
 {
 public:
-    LuaClosure(LuaCFunction value) : Value(value, LuaValueType::Closure) {}
-    LuaCFunction closure_value() const override { return m_value; }
+    LuaClosure(LuaCFunction value) : Value(value, LuaValueType::CFunction) {}
+    LuaCFunction cfunction_value() const override { return m_value; }
 };
 
 class LuaBoolean : public Value<bool>
@@ -62,7 +62,7 @@ LuaValueType LuaValue::type() const { return m_ptr->type(); }
 double LuaValue::number_value() const { return m_ptr->number_value(); }
 int LuaValue::integer_value() const { return m_ptr->integer_value(); }
 const std::string &LuaValue::string_value() const { return m_ptr->string_value(); }
-LuaCFunction LuaValue::closure_value() const { return m_ptr->closure_value(); }
+LuaCFunction LuaValue::cfunction_value() const { return m_ptr->cfunction_value(); }
 bool LuaValue::boolean_value() const { return m_ptr->boolean_value(); }
 void *LuaValue::lightuserdata_value() const { return m_ptr->lightuserdata_value(); }
 

@@ -52,6 +52,7 @@ public:
 
     void push(const std::string &name, const LuaValue &value);
     void call(const std::string &name, const LuaValueVector &values = {});
+    LuaValueVector call(const std::string &name, const LuaValueVector &values, std::vector<LuaValueType> returns);
 
     int addDirPath(const std::string &path);
 

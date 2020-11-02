@@ -15,7 +15,7 @@ int LuaValueBase::integer_value() const { return 0; }
 
 const std::string &LuaValueBase::string_value() const { return EmptyString; }
 
-LuaCFunction LuaValueBase::closure_value() const { return nullptr; }
+LuaCFunction LuaValueBase::cfunction_value() const { return nullptr; }
 
 bool LuaValueBase::boolean_value() const { return false; }
 

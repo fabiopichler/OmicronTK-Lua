@@ -88,6 +88,53 @@ void LuaState::call(const std::string &name, const LuaValueVector &values)
     lua_pcall(m_state, values.size(), 0, 0);
 }
 
+LuaValueVector LuaState::call(const std::string &name, const LuaValueVector &values, std::vector<LuaValueType> returns)
+{
+    lua_getglobal(m_state, name.c_str());
+
+    for (const auto &value : values)
+        pushLuaValue(m_state, value);
+
+    lua_pcall(m_state, values.size(), returns.size(), 0);
+
+    LuaValueVector valueVector;
+
+    for (size_t idx = 1; idx <= returns.size(); ++idx)
+    {
+        switch (returns[idx - 1]) {
+            case LuaValueType::Undefined:
+            case LuaValueType::Nil:
+            break;
+
+            case LuaValueType::Number:
+                valueVector.push_back(double(lua_tonumber(m_state, idx)));
+            break;
+
+            case LuaValueType::Integer:
+                valueVector.push_back(int(lua_tointeger(m_state, idx)));
+            break;
+
+            case LuaValueType::String:
+                valueVector.push_back(lua_tolstring(m_state, idx, nullptr));
+            break;
+
+            case LuaValueType::CFunction:
+                valueVector.push_back(lua_tocfunction(m_state, idx));
+            break;
+
+            case LuaValueType::Boolean:
+                valueVector.push_back(bool(lua_toboolean(m_state, idx)));
+            break;
+
+            case LuaValueType::Lightuserdata:
+                valueVector.push_back(lua_touserdata(m_state, idx));
+            break;
+        }
+    }
+
+    return valueVector;
+}
+
 int LuaState::addDirPath(const std::string &path)
 {
     lua_getglobal(m_state, "package");
@@ -146,8 +193,8 @@ void pushLuaValue(lua_State *state, const LuaValue &value)
             lua_pushstring(state, value.string_value().c_str());
         break;
 
-        case LuaValueType::Closure:
-            lua_pushcfunction(state, value.closure_value());
+        case LuaValueType::CFunction:
+            lua_pushcfunction(state, value.cfunction_value());
         break;
 
         case LuaValueType::Boolean:

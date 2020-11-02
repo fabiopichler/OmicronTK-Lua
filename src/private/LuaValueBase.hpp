@@ -12,7 +12,7 @@ protected:
     virtual double number_value() const;
     virtual int integer_value() const;
     virtual const std::string &string_value() const;
-    virtual LuaCFunction closure_value() const;
+    virtual LuaCFunction cfunction_value() const;
     virtual bool boolean_value() const;
     virtual void *lightuserdata_value() const;
 

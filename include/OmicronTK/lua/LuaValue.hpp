@@ -15,7 +15,7 @@ enum class LuaValueType
     Number,
     Integer,
     String,
-    Closure,
+    CFunction,
     Boolean,
     Lightuserdata
 };
@@ -36,7 +36,7 @@ public:
     double number_value() const;
     int integer_value() const;
     const std::string &string_value() const;
-    LuaCFunction closure_value() const;
+    LuaCFunction cfunction_value() const;
     bool boolean_value() const;
     void *lightuserdata_value() const;
 
