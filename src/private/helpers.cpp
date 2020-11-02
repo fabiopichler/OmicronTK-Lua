@@ -29,7 +29,12 @@ LuaValue toLuaValue(lua_State *state, LuaValueType type, uint32_t idx)
             return int(lua_tointeger(state, idx));
 
         case LuaValueType::String:
-            return lua_tolstring(state, idx, nullptr);
+        {
+            if (lua_isnil(state, idx))
+                return EmptyString;
+
+            return lua_tostring(state, idx);
+        }
 
         case LuaValueType::CFunction:
             return lua_tocfunction(state, idx);

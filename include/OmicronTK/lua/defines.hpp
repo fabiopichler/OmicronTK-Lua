@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
 typedef struct lua_State lua_State;
 
@@ -16,6 +17,8 @@ struct LuaReg
 };
 
 using LuaRegVector = std::vector<LuaReg>;
+
+static const std::string EmptyString;
 
 }
 }

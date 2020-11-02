@@ -5,8 +5,6 @@
 namespace OmicronTK {
 namespace lua {
 
-static const std::string EmptyString;
-
 LuaValueType LuaValueBase::type() const { return LuaValueType::Undefined; }
 
 double LuaValueBase::number_value() const { return 0.0; }
