@@ -10,14 +10,6 @@ namespace lua {
 
 using LuaCFunction = int (*)(lua_State *L);
 
-struct LuaReg
-{
-    const char *name;
-    LuaCFunction func;
-};
-
-using LuaRegVector = std::vector<LuaReg>;
-
 static const std::string EmptyString;
 
 }

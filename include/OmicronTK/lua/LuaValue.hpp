@@ -46,5 +46,13 @@ private:
 
 using LuaValueVector = std::vector<LuaValue>;
 
+struct LuaReg
+{
+    const char *name;
+    LuaValue value;
+};
+
+using LuaRegVector = std::vector<LuaReg>;
+
 }
 }
