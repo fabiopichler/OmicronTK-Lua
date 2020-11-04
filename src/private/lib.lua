@@ -21,7 +21,7 @@ function class(name, super)
         if o.constructor then
             o.constructor(o, ...)
         elseif super and super.self.constructor then
-            super.constructor(o, ...)
+            super.self.constructor(o, ...)
         end
 
         return o
