@@ -1,28 +1,32 @@
 
 /*--*/R"#####(
-function class(self, base)
-    self.__index = self
+function class(name, super)
+    local _class = {
+        self = {},
+        class = { name = name },
+    }
 
-    if base then
-        setmetatable(self, base)
+    if super then
+        setmetatable(_class.self, { __index = super.self })
+        _class.class.superClass = super.class.name
     end
 
-    function self.new(...)
-        local o = setmetatable({}, self)
+    function _class.new(...)
+        local o = setmetatable({}, { __index = _class.self })
 
-        if base then
-            o.super = base.constructor
+        if super then
+            o.super = super.self.constructor
         end
 
         if o.constructor then
             o.constructor(o, ...)
-        elseif base and base.constructor then
-            base.constructor(o, ...)
+        elseif super and super.self.constructor then
+            super.constructor(o, ...)
         end
 
         return o
     end
 
-    return self
+    return _class
 end
 )#####";
