@@ -36,10 +36,16 @@
 namespace OmicronTK {
 namespace lua {
 
+static const char *lib =
+    #include "private/lib.lua"
+;
+
 LuaState::LuaState()
 {
     m_state = luaL_newstate();
+
     luaL_openlibs(m_state);
+    execute(lib);
 }
 
 LuaState::~LuaState()
