@@ -1,11 +1,11 @@
 
 /*--*/R"#####(
 function class(self, base)
-    if base then
-        setmetatable(self, { __index = base })
-    end
-
     self.__index = self
+
+    if base then
+        setmetatable(self, base)
+    end
 
     function self.new(...)
         local o = setmetatable({}, self)
@@ -15,9 +15,9 @@ function class(self, base)
         end
 
         if o.constructor then
-            o:constructor(...)
+            o.constructor(o, ...)
         elseif base and base.constructor then
-            base:constructor(...)
+            base.constructor(o, ...)
         end
 
         return o
