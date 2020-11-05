@@ -92,24 +92,14 @@ LuaValue LuaState::getGlobal(const std::string &name, LuaValueType type)
     return value;
 }
 
-void LuaState::call(const std::string &name, const LuaValueVector &values)
+void LuaState::call(const std::vector<std::string> &names, const LuaValueVector &values)
 {
-    lua_getglobal(m_state, name.c_str());
-
-    for (const auto &value : values)
-        pushLuaValue(m_state, value);
-
-    lua_pcall(m_state, values.size(), 0, 0);
+    pcall(m_state, names, values, 0);
 }
 
-LuaValueVector LuaState::call(const std::string &name, const LuaValueVector &values, std::vector<LuaValueType> returns)
+LuaValueVector LuaState::call(const std::vector<std::string> &names, const LuaValueVector &values, std::vector<LuaValueType> returns)
 {
-    lua_getglobal(m_state, name.c_str());
-
-    for (const auto &value : values)
-        pushLuaValue(m_state, value);
-
-    lua_pcall(m_state, values.size(), returns.size(), 0);
+    pcall(m_state, names, values, returns.size());
 
     LuaValueVector valueVector;
 

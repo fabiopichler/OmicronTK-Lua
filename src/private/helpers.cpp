@@ -15,6 +15,26 @@ void LuaRegVector_forEach(lua_State *L, const LuaRegVector &values)
     }
 }
 
+void pcall(lua_State *state, const std::vector<std::string> &names, const LuaValueVector &values, size_t returnsSize)
+{
+    lua_getglobal(state, names[0].c_str());
+
+    size_t valuesSize = values.size();
+
+    if (names.size() == 2)
+    {
+        ++valuesSize;
+
+        lua_getfield(state, -1, names[1].c_str());
+        lua_pushvalue(state, -2);
+    }
+
+    for (const auto &value : values)
+        pushLuaValue(state, value);
+
+    lua_pcall(state, valuesSize, returnsSize, 0);
+}
+
 LuaValue toLuaValue(lua_State *state, LuaValueType type, uint32_t idx)
 {
     switch (type) {
