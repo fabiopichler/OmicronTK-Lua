@@ -1,6 +1,22 @@
 
 /*--*/R"#####(
+
+local function checkSuper(super)
+    return super ~= nil and (type(super) ~= "table" or type(super.self) ~= "table" or type(super.class) ~= "table")
+end
+
 function class(name, super)
+
+    if type(name) ~= "string" then
+        error "'name' must be a string"
+        return nil
+    end
+
+    if checkSuper(super) then
+        error "'super' is not a valid class"
+        return nil
+    end
+
     local _class = {
         self = {},
         class = { name = name },
@@ -29,4 +45,5 @@ function class(name, super)
 
     return _class
 end
+
 )#####";
