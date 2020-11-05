@@ -1,8 +1,45 @@
 
 /*--*/R"#####(
 
+--[[
+
+Copyright (c) 2020 Fábio Pichler
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+--]]
+
+Object = {
+    proto = {},
+    class = { name = "Object" },
+}
+
+function Object.proto:instanceOf(class)
+    return getmetatable(self).__index == class.proto
+end
+
+--function Object.proto:toString()
+--    return tostring(self)
+--end
+
 local function checkSuper(super)
-    return super ~= nil and (type(super) ~= "table" or type(super.self) ~= "table" or type(super.class) ~= "table")
+    return super ~= nil and (type(super) ~= "table" or type(super.proto) ~= "table" or type(super.class) ~= "table")
 end
 
 function class(name, super)
@@ -17,30 +54,32 @@ function class(name, super)
         return nil
     end
 
+    super = super or Object
+
     local _class = {
-        self = {},
-        class = { name = name },
+        proto = {},
+        class = {
+            name = name,
+            super = super.class.name,
+        },
     }
 
-    if super then
-        setmetatable(_class.self, { __index = super.self })
-        _class.class.superClass = super.class.name
-    end
+    setmetatable(_class.proto, { __index = super.proto })
 
     function _class.new(...)
-        local o = setmetatable({}, { __index = _class.self })
+        local self = setmetatable({}, { __index = _class.proto })
 
-        if super then
-            o.super = super.self.constructor
+        if super.proto.constructor then
+            self.super = super.proto.constructor
         end
 
-        if o.constructor then
-            o.constructor(o, ...)
-        elseif super and super.self.constructor then
-            super.self.constructor(o, ...)
+        if _class.proto.constructor then
+            _class.proto.constructor(self, ...)
+        elseif super.proto.constructor then
+            super.proto.constructor(self, ...)
         end
 
-        return o
+        return self
     end
 
     return _class
