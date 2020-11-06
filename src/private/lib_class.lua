@@ -34,7 +34,11 @@ Object = {
 function Object.proto:constructor() end
 
 function Object.proto:instanceOf(class)
-    return getmetatable(self).__index == class.proto
+    if not Object.isValidClass(class) then
+        return false
+    end
+
+    return getmetatable(self).class.name == class.class.name
 end
 
 function Object.proto:toString()
@@ -50,7 +54,7 @@ function Object.create(name, super, proto)
         return nil
     end
 
-    if private.checkSuper(super) then
+    if super ~= nil and not Object.isValidClass(super) then
         error "'super' is not a valid class"
         return nil
     end
@@ -85,12 +89,12 @@ function Object.create(name, super, proto)
     return _class
 end
 
-function class(name, super, proto)
-    return Object.create(name, super, proto)
+function Object.isValidClass(class)
+    return type(class) == "table" and type(class.proto) == "table" and type(class.class) == "table"
 end
 
-function private.checkSuper(super)
-    return super ~= nil and (type(super) ~= "table" or type(super.proto) ~= "table" or type(super.class) ~= "table")
+function class(name, super, proto)
+    return Object.create(name, super, proto)
 end
 
 --)luafile"--"
