@@ -61,7 +61,7 @@ function Object.create(name, super, proto)
 
     super = super or Object
 
-    local _class = {
+    local newClass = {
         proto = proto or {},
         class = {
             name = name,
@@ -69,24 +69,27 @@ function Object.create(name, super, proto)
         },
     }
 
-    setmetatable(_class.proto, { __index = super.proto })
+    newClass.__mt_prototype = {
+        __index = newClass.proto,
+        __name = name,
+        class = newClass.class,
+    }
 
-    function _class.new(...)
+    setmetatable(newClass.proto, { __index = super.proto })
+
+    function newClass.new(...)
         local self = {
             super = super.proto.constructor,
         }
 
-        setmetatable(self, {
-            __index = _class.proto,
-            class = _class.class,
-        })
+        setmetatable(self, newClass.__mt_prototype)
 
-        _class.proto.constructor(self, ...)
+        newClass.proto.constructor(self, ...)
 
         return self
     end
 
-    return _class
+    return newClass
 end
 
 function Object.isValidClass(class)
