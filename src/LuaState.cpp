@@ -36,8 +36,8 @@
 namespace OmicronTK {
 namespace lua {
 
-static const char *lib =
-    #include "private/lib.lua"
+static const char *lib_class =
+    #include "private/lib_class.lua"
 ;
 
 LuaState::LuaState()
@@ -45,7 +45,7 @@ LuaState::LuaState()
     m_state = luaL_newstate();
 
     luaL_openlibs(m_state);
-    execute(lib);
+    execute(lib_class);
 }
 
 LuaState::~LuaState()
