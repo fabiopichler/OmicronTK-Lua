@@ -45,7 +45,7 @@ public:
     LuaState();
     ~LuaState();
 
-    inline lua_State *state() const { return m_state; }
+    inline lua_State *state() { return m_state; }
 
     bool loadFile(const std::string &fileName);
     bool execute(const std::string &script);

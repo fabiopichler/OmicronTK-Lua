@@ -30,6 +30,7 @@
 #pragma once
 
 #include "OmicronTK/lua/global.h"
+#include "OmicronTK/lua/LuaValue.hpp"
 
 #include <lua.hpp>
 #include <vector>
@@ -53,8 +54,15 @@ public:
         return *static_cast<LuaClass **>(luaL_checkudata(L, ud, tableName));
     }
 
-    template<typename LuaClass>
-    static inline int __gc(lua_State *L, const char *tableName)
+    template<typename LuaClass, const char *tableName>
+    static inline LuaReg __gc()
+    {
+        return LuaReg { "__gc", luaCFunc__gc<LuaClass, tableName> };
+    }
+
+private:
+    template<typename LuaClass, const char *tableName>
+    static inline int luaCFunc__gc(lua_State *L)
     {
         LuaClass *userdata = checkUserData<LuaClass>(L, 1, tableName);
 
