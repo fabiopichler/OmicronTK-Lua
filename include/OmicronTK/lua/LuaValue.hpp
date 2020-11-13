@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "OmicronTK/lua/defines.hpp"
+#include "OmicronTK/lua/CallbackInfo.hpp"
 
 namespace OmicronTK {
 namespace lua {
@@ -29,6 +30,7 @@ public:
     LuaValue(const char *value);
     LuaValue(const std::string &value);
     LuaValue(LuaCFunction value);
+    LuaValue(LuaCppFunction value);
     LuaValue(bool value);
     LuaValue(void *value);
 

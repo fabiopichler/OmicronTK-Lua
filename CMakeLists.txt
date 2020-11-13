@@ -49,7 +49,9 @@ set(SRC_FILES
     src/private/helpers.hpp
     src/LuaValue.cpp
     src/util/LuaUtil.cpp
-    src/LuaState.cpp)
+    src/LuaState.cpp
+    src/CallbackInfo.cpp
+    include/OmicronTK/lua/CallbackInfo.hpp)
 
 if(WIN32)
     set(SRC_FILES ${SRC_FILES} rc/lua.rc)

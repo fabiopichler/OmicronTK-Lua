@@ -55,6 +55,7 @@ LuaValue::LuaValue(int value) : m_ptr(std::make_shared<LuaInteger>(value)) {}
 LuaValue::LuaValue(const char *value) : m_ptr(std::make_shared<LuaString>(value)) {}
 LuaValue::LuaValue(const std::string &value) : m_ptr(std::make_shared<LuaString>(value)) {}
 LuaValue::LuaValue(LuaCFunction value) : m_ptr(std::make_shared<LuaClosure>(value)) {}
+LuaValue::LuaValue(LuaCppFunction value) : m_ptr(std::make_shared<LuaClosure>(reinterpret_cast<LuaCFunction>(value))) {}
 LuaValue::LuaValue(bool value) : m_ptr(std::make_shared<LuaBoolean>(value)) {}
 LuaValue::LuaValue(void *value) : m_ptr(std::make_shared<LuaLightuserdata>(value)) {}
 
