@@ -42,6 +42,14 @@ public:
     bool boolean_value() const;
     void *lightuserdata_value() const;
 
+    inline operator double () const { return number_value(); }
+    inline operator int () const { return integer_value(); }
+    inline operator const char *() { return string_value().c_str(); }
+    inline operator const std::string &() const { return string_value(); }
+    inline operator LuaCFunction () const { return cfunction_value(); }
+    inline operator bool () const { return boolean_value(); }
+    inline operator void *() const { return lightuserdata_value(); }
+
 private:
     std::shared_ptr<LuaValueBase> m_ptr;
 };
