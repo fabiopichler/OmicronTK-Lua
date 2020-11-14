@@ -28,7 +28,7 @@
 *******************************************************************************/
 
 #include "OmicronTK/lua/LuaState.hpp"
-#include "private/helpers.hpp"
+#include "OmicronTK/lua/helpers.hpp"
 
 #include <lua.hpp>
 #include <iostream>

@@ -45,13 +45,15 @@ set(SRC_FILES
     include/OmicronTK/lua/version.h
     src/private/LuaValueBase.cpp
     src/private/LuaValueBase.hpp
-    src/private/helpers.cpp
-    src/private/helpers.hpp
+    src/helpers.cpp
+    include/OmicronTK/lua/helpers.hpp
     src/LuaValue.cpp
     src/util/LuaUtil.cpp
     src/LuaState.cpp
     src/CallbackInfo.cpp
-    include/OmicronTK/lua/CallbackInfo.hpp)
+    include/OmicronTK/lua/CallbackInfo.hpp
+    src/LuaObject.cpp
+    include/OmicronTK/lua/LuaObject.hpp)
 
 if(WIN32)
     set(SRC_FILES ${SRC_FILES} rc/lua.rc)
