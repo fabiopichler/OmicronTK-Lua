@@ -9,22 +9,22 @@
 namespace OmicronTK {
 namespace lua {
 
-enum class LuaValueType
-{
-    Undefined,
-    Nil,
-    Number,
-    Integer,
-    String,
-    CFunction,
-    Boolean,
-    Lightuserdata
-};
-
 class LuaValueBase;
 class LuaValue
 {
 public:
+    enum Type
+    {
+        Undefined,
+        Nil,
+        Number,
+        Integer,
+        String,
+        CFunction,
+        Boolean,
+        Lightuserdata
+    };
+
     LuaValue(double value);
     LuaValue(int value);
     LuaValue(const char *value);
@@ -34,7 +34,8 @@ public:
     LuaValue(bool value);
     LuaValue(void *value);
 
-    LuaValueType type() const;
+    LuaValue::Type type() const;
+
     double number_value() const;
     int integer_value() const;
     const std::string &string_value() const;

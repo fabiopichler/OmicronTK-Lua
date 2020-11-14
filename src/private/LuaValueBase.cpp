@@ -5,7 +5,7 @@
 namespace OmicronTK {
 namespace lua {
 
-LuaValueType LuaValueBase::type() const { return LuaValueType::Undefined; }
+LuaValue::Type LuaValueBase::type() const { return LuaValue::Undefined; }
 
 double LuaValueBase::number_value() const { return 0.0; }
 

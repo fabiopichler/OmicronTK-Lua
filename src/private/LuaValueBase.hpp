@@ -8,7 +8,7 @@ namespace lua {
 class LuaValueBase
 {
 protected:
-    virtual LuaValueType type() const;
+    virtual LuaValue::Type type() const;
     virtual double number_value() const;
     virtual int integer_value() const;
     virtual const std::string &string_value() const;
@@ -23,15 +23,15 @@ template<typename T>
 class Value : public LuaValueBase
 {
 public:
-    Value(T value, LuaValueType type)
+    Value(T value, LuaValue::Type type)
         : m_value(value)
         , m_type(type) {}
 
-    LuaValueType type() const override { return m_type; }
+    LuaValue::Type type() const override { return m_type; }
 
 protected:
     T m_value;
-    LuaValueType m_type;
+    LuaValue::Type m_type;
 };
 
 }

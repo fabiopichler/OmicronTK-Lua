@@ -51,9 +51,9 @@ public:
     bool execute(const std::string &script);
 
     void setGlobal(const std::string &name, const LuaValue &value);
-    LuaValue getGlobal(const std::string &name, LuaValueType type);
+    LuaValue getGlobal(const std::string &name, LuaValue::Type type);
     void call(const std::vector<std::string> &names, const LuaValueVector &values = {});
-    LuaValueVector call(const std::vector<std::string> &names, const LuaValueVector &values, std::vector<LuaValueType> returns);
+    LuaValueVector call(const std::vector<std::string> &names, const LuaValueVector &values, std::vector<LuaValue::Type> returns);
 
     int addDirPath(const std::string &path);
 

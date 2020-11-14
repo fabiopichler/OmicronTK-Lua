@@ -35,20 +35,20 @@ void pcall(lua_State *state, const std::vector<std::string> &names, const LuaVal
     lua_pcall(state, valuesSize, returnsSize, 0);
 }
 
-LuaValue toLuaValue(lua_State *state, LuaValueType type, uint32_t idx)
+LuaValue toLuaValue(lua_State *state, LuaValue::Type type, uint32_t idx)
 {
     switch (type) {
-        case LuaValueType::Undefined:
-        case LuaValueType::Nil:
+        case LuaValue::Undefined:
+        case LuaValue::Nil:
         break;
 
-        case LuaValueType::Number:
+        case LuaValue::Number:
             return double(lua_tonumber(state, idx));
 
-        case LuaValueType::Integer:
+        case LuaValue::Integer:
             return int(lua_tointeger(state, idx));
 
-        case LuaValueType::String:
+        case LuaValue::String:
         {
             if (lua_isnil(state, idx))
                 return EmptyString;
@@ -56,13 +56,13 @@ LuaValue toLuaValue(lua_State *state, LuaValueType type, uint32_t idx)
             return lua_tostring(state, idx);
         }
 
-        case LuaValueType::CFunction:
+        case LuaValue::CFunction:
             return lua_tocfunction(state, idx);
 
-        case LuaValueType::Boolean:
+        case LuaValue::Boolean:
             return bool(lua_toboolean(state, idx));
 
-        case LuaValueType::Lightuserdata:
+        case LuaValue::Lightuserdata:
             return lua_touserdata(state, idx);
     }
 
@@ -72,34 +72,34 @@ LuaValue toLuaValue(lua_State *state, LuaValueType type, uint32_t idx)
 void pushLuaValue(lua_State *state, const LuaValue &value)
 {
     switch (value.type()) {
-        case LuaValueType::Undefined:
+        case LuaValue::Undefined:
         break;
 
-        case LuaValueType::Nil:
+        case LuaValue::Nil:
             lua_pushnil(state);
         break;
 
-        case LuaValueType::Number:
+        case LuaValue::Number:
             lua_pushnumber(state, value.number_value());
         break;
 
-        case LuaValueType::Integer:
+        case LuaValue::Integer:
             lua_pushinteger(state, value.integer_value());
         break;
 
-        case LuaValueType::String:
+        case LuaValue::String:
             lua_pushstring(state, value.string_value().c_str());
         break;
 
-        case LuaValueType::CFunction:
+        case LuaValue::CFunction:
             lua_pushcfunction(state, value.cfunction_value());
         break;
 
-        case LuaValueType::Boolean:
+        case LuaValue::Boolean:
             lua_pushboolean(state, value.boolean_value());
         break;
 
-        case LuaValueType::Lightuserdata:
+        case LuaValue::Lightuserdata:
             lua_pushlightuserdata(state, value.lightuserdata_value());
         break;
     }

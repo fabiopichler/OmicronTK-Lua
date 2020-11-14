@@ -10,21 +10,21 @@ namespace lua {
 class LuaNumber : public Value<double>
 {
 public:
-    LuaNumber(double value) : Value(value, LuaValueType::Number) {}
+    LuaNumber(double value) : Value(value, LuaValue::Number) {}
     double number_value() const override { return m_value; }
 };
 
 class LuaInteger : public Value<int>
 {
 public:
-    LuaInteger(int value) : Value(value, LuaValueType::Integer) {}
+    LuaInteger(int value) : Value(value, LuaValue::Integer) {}
     int integer_value() const override { return m_value; }
 };
 
 class LuaString : public Value<std::string>
 {
 public:
-    LuaString(const std::string &value) : Value(value, LuaValueType::String) {}
+    LuaString(const std::string &value) : Value(value, LuaValue::String) {}
 
     const std::string &string_value() const override { return m_value; }
 };
@@ -32,21 +32,21 @@ public:
 class LuaClosure : public Value<LuaCFunction>
 {
 public:
-    LuaClosure(LuaCFunction value) : Value(value, LuaValueType::CFunction) {}
+    LuaClosure(LuaCFunction value) : Value(value, LuaValue::CFunction) {}
     LuaCFunction cfunction_value() const override { return m_value; }
 };
 
 class LuaBoolean : public Value<bool>
 {
 public:
-    LuaBoolean(bool value) : Value(value, LuaValueType::Boolean) {}
+    LuaBoolean(bool value) : Value(value, LuaValue::Boolean) {}
     bool boolean_value() const override { return m_value; }
 };
 
 class LuaLightuserdata : public Value<void *>
 {
 public:
-    LuaLightuserdata(void *value) : Value(value, LuaValueType::Lightuserdata) {}
+    LuaLightuserdata(void *value) : Value(value, LuaValue::Lightuserdata) {}
     void *lightuserdata_value() const override { return m_value; }
 };
 
@@ -59,7 +59,7 @@ LuaValue::LuaValue(LuaCppFunction value) : m_ptr(std::make_shared<LuaClosure>(re
 LuaValue::LuaValue(bool value) : m_ptr(std::make_shared<LuaBoolean>(value)) {}
 LuaValue::LuaValue(void *value) : m_ptr(std::make_shared<LuaLightuserdata>(value)) {}
 
-LuaValueType LuaValue::type() const { return m_ptr->type(); }
+LuaValue::Type LuaValue::type() const { return m_ptr->type(); }
 double LuaValue::number_value() const { return m_ptr->number_value(); }
 int LuaValue::integer_value() const { return m_ptr->integer_value(); }
 const std::string &LuaValue::string_value() const { return m_ptr->string_value(); }
