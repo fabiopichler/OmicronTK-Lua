@@ -14,7 +14,7 @@ protected:
     virtual const std::string &string_value() const;
     virtual LuaCFunction cfunction_value() const;
     virtual bool boolean_value() const;
-    virtual void *lightuserdata_value() const;
+    virtual void *userdata_value() const;
 
     friend class LuaValue;
 };

@@ -62,7 +62,7 @@ LuaValue toLuaValue(lua_State *state, LuaValue::Type type, uint32_t idx)
         case LuaValue::Boolean:
             return bool(lua_toboolean(state, idx));
 
-        case LuaValue::Lightuserdata:
+        case LuaValue::UserData:
             return lua_touserdata(state, idx);
     }
 
@@ -99,8 +99,8 @@ void pushLuaValue(lua_State *state, const LuaValue &value)
             lua_pushboolean(state, value.boolean_value());
         break;
 
-        case LuaValue::Lightuserdata:
-            lua_pushlightuserdata(state, value.lightuserdata_value());
+        case LuaValue::UserData:
+            lua_pushlightuserdata(state, value.userdata_value());
         break;
     }
 }

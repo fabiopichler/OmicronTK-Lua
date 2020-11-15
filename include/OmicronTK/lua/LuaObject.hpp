@@ -28,8 +28,6 @@ SOFTWARE.
 #include "OmicronTK/lua/util/LuaUtil.hpp"
 #include "OmicronTK/lua/helpers.hpp"
 
-#include <vector>
-
 namespace OmicronTK {
 namespace lua {
 
@@ -40,8 +38,7 @@ public:
     template<const LuaValue::Type... _types>
     inline static int constructor(lua_State *L)
     {
-        std::vector<LuaValue> args;
-        forEach<_types...>(L, 1, args);
+        auto args = argsFunc<_types...>(1, L);
 
         _Class *object = callConstructor(args, std::make_index_sequence<sizeof... (_types)>{});
 
@@ -55,8 +52,7 @@ public:
     {
         _Class *object = LuaUtil::checkUserData<_Class>(L, 1, _className);
 
-        std::vector<LuaValue> args;
-        forEach<_types...>(L, 2, args);
+        auto args = argsFunc<_types...>(2, L);
 
         callMethod(object, _method, args, std::make_index_sequence<sizeof... (_types)>{});
 
@@ -68,45 +64,42 @@ public:
     {
         _Class *object = LuaUtil::checkUserData<_Class>(L, 1, _className);
 
-        std::vector<LuaValue> args;
-        forEach<_types...>(L, 2, args);
+        auto args = argsFunc<_types...>(2, L);
 
-        LuaValue valueReturn = callMethod_r(object, _method, args, std::make_index_sequence<sizeof... (_types)>{});
+        LuaValue val = callMethod_r(object, _method, args, std::make_index_sequence<sizeof... (_types)>{});
 
-        pushLuaValue(L, valueReturn);
+        pushLuaValue(L, val);
 
         return 1;
     }
 
 private:
     template<const LuaValue::Type... _types>
-    inline static void forEach(lua_State *L, uint32_t index, std::vector<LuaValue> &args)
+    inline static auto argsFunc(const uint32_t firstIndex, lua_State *L)
     {
-        const LuaValue::Type types[] = { _types... };
+        const LuaValue::Type types[] { _types... };
 
-        for (const LuaValue::Type &type : types)
-        {
-            args.push_back(toLuaValue(L, type, index));
-            ++index;
-        }
+        return [types, firstIndex, L] (int i) {
+            return toLuaValue(L, types[i], i + firstIndex);
+        };
     }
 
-    template<typename _Args, std::size_t... I>
-    inline static _Class *callConstructor(_Args&& _args, std::index_sequence<I...>)
+    template<typename _ArgsFunc, std::size_t... I>
+    inline static _Class *callConstructor(_ArgsFunc&& _args, std::index_sequence<I...>)
     {
-        return new _Class(_args[I]...);
+        return new _Class(_args(I)...);
     }
 
-    template<typename _Method, typename _Args, std::size_t... I>
-    inline static void callMethod(_Class *_object, _Method&& _method, _Args&& _args, std::index_sequence<I...>)
+    template<typename _Method, typename _ArgsFunc, std::size_t... I>
+    inline static void callMethod(_Class *_object, _Method&& _method, _ArgsFunc&& _args, std::index_sequence<I...>)
     {
-        (_object->*(*_method))(_args[I]...);
+        (_object->*(*_method))(_args(I)...);
     }
 
-    template<typename _Method, typename _Args, std::size_t... I>
-    inline static auto callMethod_r(_Class *_object, _Method&& _method, _Args&& _args, std::index_sequence<I...>)
+    template<typename _Method, typename _ArgsFunc, std::size_t... I>
+    inline static auto callMethod_r(_Class *_object, _Method&& _method, _ArgsFunc&& _args, std::index_sequence<I...>)
     {
-        return std::forward<LuaValue>((_object->*(*_method))(_args[I]...));
+        return std::forward<LuaValue>((_object->*(*_method))(_args(I)...));
     }
 };
 

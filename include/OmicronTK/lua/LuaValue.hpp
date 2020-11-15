@@ -22,7 +22,7 @@ public:
         String,
         CFunction,
         Boolean,
-        Lightuserdata
+        UserData
     };
 
     LuaValue(double value);
@@ -41,7 +41,7 @@ public:
     const std::string &string_value() const;
     LuaCFunction cfunction_value() const;
     bool boolean_value() const;
-    void *lightuserdata_value() const;
+    void *userdata_value() const;
 
     inline operator double () const { return number_value(); }
     inline operator int () const { return integer_value(); }
@@ -49,7 +49,7 @@ public:
     inline operator const std::string &() const { return string_value(); }
     inline operator LuaCFunction () const { return cfunction_value(); }
     inline operator bool () const { return boolean_value(); }
-    inline operator void *() const { return lightuserdata_value(); }
+    inline operator void *() const { return userdata_value(); }
 
 private:
     std::shared_ptr<LuaValueBase> m_ptr;

@@ -17,7 +17,7 @@ LuaCFunction LuaValueBase::cfunction_value() const { return nullptr; }
 
 bool LuaValueBase::boolean_value() const { return false; }
 
-void *LuaValueBase::lightuserdata_value() const { return nullptr; }
+void *LuaValueBase::userdata_value() const { return nullptr; }
 
 }
 }

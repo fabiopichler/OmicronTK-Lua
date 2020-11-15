@@ -43,11 +43,11 @@ public:
     bool boolean_value() const override { return m_value; }
 };
 
-class LuaLightuserdata : public Value<void *>
+class LuaUserData : public Value<void *>
 {
 public:
-    LuaLightuserdata(void *value) : Value(value, LuaValue::Lightuserdata) {}
-    void *lightuserdata_value() const override { return m_value; }
+    LuaUserData(void *value) : Value(value, LuaValue::UserData) {}
+    void *userdata_value() const override { return m_value; }
 };
 
 LuaValue::LuaValue(double value) : m_ptr(std::make_shared<LuaNumber>(value)) {}
@@ -57,7 +57,7 @@ LuaValue::LuaValue(const std::string &value) : m_ptr(std::make_shared<LuaString>
 LuaValue::LuaValue(LuaCFunction value) : m_ptr(std::make_shared<LuaClosure>(value)) {}
 LuaValue::LuaValue(LuaCppFunction value) : m_ptr(std::make_shared<LuaClosure>(reinterpret_cast<LuaCFunction>(value))) {}
 LuaValue::LuaValue(bool value) : m_ptr(std::make_shared<LuaBoolean>(value)) {}
-LuaValue::LuaValue(void *value) : m_ptr(std::make_shared<LuaLightuserdata>(value)) {}
+LuaValue::LuaValue(void *value) : m_ptr(std::make_shared<LuaUserData>(value)) {}
 
 LuaValue::Type LuaValue::type() const { return m_ptr->type(); }
 double LuaValue::number_value() const { return m_ptr->number_value(); }
@@ -65,7 +65,7 @@ int LuaValue::integer_value() const { return m_ptr->integer_value(); }
 const std::string &LuaValue::string_value() const { return m_ptr->string_value(); }
 LuaCFunction LuaValue::cfunction_value() const { return m_ptr->cfunction_value(); }
 bool LuaValue::boolean_value() const { return m_ptr->boolean_value(); }
-void *LuaValue::lightuserdata_value() const { return m_ptr->lightuserdata_value(); }
+void *LuaValue::userdata_value() const { return m_ptr->userdata_value(); }
 
 }
 }
