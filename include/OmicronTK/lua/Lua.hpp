@@ -56,8 +56,17 @@ public:
     void addToTable(const std::string &table, const std::string &field, const LuaValue &value);
     void addToTable(const std::string &table, const LuaRegVector &statics);
 
-    void call(const std::vector<std::string> &names, const LuaValueVector &values = {});
-    LuaValueVector call(const std::vector<std::string> &names, const LuaValueVector &values, std::vector<LuaValue::Type> returns);
+    void callFunction(const std::string &name, const LuaValueVector &values = {});
+    LuaValueVector callFunction(const std::string &name, const LuaValueVector &values,
+                                const std::vector<LuaValue::Type> &returns);
+
+    void callTableFunction(const std::string &table, const std::string &field, const LuaValueVector &values = {});
+    LuaValueVector callTableFunction(const std::string &table, const std::string &field,
+                                     const LuaValueVector &values, const std::vector<LuaValue::Type> &returns);
+
+    void callObjectMethod(const std::string &table, const std::string &field, const LuaValueVector &values = {});
+    LuaValueVector callObjectMethod(const std::string &table, const std::string &field,
+                                    const LuaValueVector &values, const std::vector<LuaValue::Type> &returns);
 
     int addDirPath(const std::string &path);
 

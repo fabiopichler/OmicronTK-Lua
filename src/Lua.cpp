@@ -129,23 +129,40 @@ void Lua::addToTable(const std::string &table, const LuaRegVector &statics)
     lua_pop(m_state, 1);
 }
 
-void Lua::call(const std::vector<std::string> &names, const LuaValueVector &values)
+void Lua::callFunction(const std::string &name, const LuaValueVector &values)
 {
-    pcall(m_state, names, values, 0);
+    pcall(m_state, name, values, 0);
 }
 
-LuaValueVector Lua::call(const std::vector<std::string> &names, const LuaValueVector &values, std::vector<LuaValue::Type> returns)
+LuaValueVector Lua::callFunction(const std::string &name, const LuaValueVector &values,
+                                 const std::vector<LuaValue::Type> &returns)
 {
-    pcall(m_state, names, values, returns.size());
+    pcall(m_state, name, values, returns.size());
+    return pcallReturn(m_state, returns);
+}
 
-    LuaValueVector valueVector;
+void Lua::callTableFunction(const std::string &table, const std::string &field, const LuaValueVector &values)
+{
+    pcallTable(m_state, false, table, field, values, 0);
+}
 
-    for (size_t idx = 1; idx <= returns.size(); ++idx)
-        valueVector.push_back(toLuaValue(m_state, returns[idx - 1], idx));
+LuaValueVector Lua::callTableFunction(const std::string &table, const std::string &field,
+                                 const LuaValueVector &values, const std::vector<LuaValue::Type> &returns)
+{
+    pcallTable(m_state, false, table, field, values, returns.size());
+    return pcallReturn(m_state, returns);
+}
 
-    lua_settop(m_state, 0);
+void Lua::callObjectMethod(const std::string &table, const std::string &field, const LuaValueVector &values)
+{
+    pcallTable(m_state, true, table, field, values, 0);
+}
 
-    return valueVector;
+LuaValueVector Lua::callObjectMethod(const std::string &table, const std::string &field,
+                                const LuaValueVector &values, const std::vector<LuaValue::Type> &returns)
+{
+    pcallTable(m_state, false, table, field, values, returns.size());
+    return pcallReturn(m_state, returns);
 }
 
 int Lua::addDirPath(const std::string &path)

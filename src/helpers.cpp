@@ -15,24 +15,50 @@ void LuaRegVector_forEach(lua_State *L, const LuaRegVector &values)
     }
 }
 
-void pcall(lua_State *state, const std::vector<std::string> &names, const LuaValueVector &values, size_t returnsSize)
+void pcall(lua_State *state, const std::string &name, const LuaValueVector &values, size_t returnsSize)
 {
-    lua_getglobal(state, names[0].c_str());
+    lua_getglobal(state, name.c_str());
+
+    for (const auto &value : values)
+        pushLuaValue(state, value);
+
+    lua_pcall(state, values.size(), returnsSize, 0);
+}
+
+void pcallTable(lua_State *state, bool isObject, const std::string &table, const std::string &field,
+                const LuaValueVector &values, size_t returnsSize)
+{
+    lua_getglobal(state, table.c_str());
+    lua_getfield(state, -1, field.c_str());
 
     size_t valuesSize = values.size();
 
-    if (names.size() == 2)
+    if (isObject)
     {
         ++valuesSize;
-
-        lua_getfield(state, -1, names[1].c_str());
         lua_pushvalue(state, -2);
+    }
+    else
+    {
+        lua_pushvalue(state, -1);
     }
 
     for (const auto &value : values)
         pushLuaValue(state, value);
 
     lua_pcall(state, valuesSize, returnsSize, 0);
+}
+
+LuaValueVector pcallReturn(lua_State *state, const std::vector<LuaValue::Type> &returns)
+{
+    LuaValueVector valueVector;
+
+    for (size_t idx = 0; idx < returns.size(); ++idx)
+        valueVector.push_back(toLuaValue(state, returns[idx], idx + 1));
+
+    lua_settop(state, 0);
+
+    return valueVector;
 }
 
 LuaValue toLuaValue(lua_State *state, LuaValue::Type type, uint32_t idx)
