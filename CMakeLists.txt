@@ -40,7 +40,7 @@ set(SRC_FILES
     include/OmicronTK/lua/global.h
     include/OmicronTK/lua/defines.hpp
     include/OmicronTK/lua/util/LuaUtil.hpp
-    include/OmicronTK/lua/LuaState.hpp
+    include/OmicronTK/lua/Lua.hpp
     include/OmicronTK/lua/LuaValue.hpp
     include/OmicronTK/lua/version.h
     src/private/LuaValueBase.cpp
@@ -49,7 +49,7 @@ set(SRC_FILES
     include/OmicronTK/lua/helpers.hpp
     src/LuaValue.cpp
     src/util/LuaUtil.cpp
-    src/LuaState.cpp
+    src/Lua.cpp
     src/CallbackInfo.cpp
     include/OmicronTK/lua/CallbackInfo.hpp
     src/LuaObject.cpp

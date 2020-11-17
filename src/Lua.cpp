@@ -27,7 +27,7 @@
 
 *******************************************************************************/
 
-#include "OmicronTK/lua/LuaState.hpp"
+#include "OmicronTK/lua/Lua.hpp"
 #include "OmicronTK/lua/helpers.hpp"
 
 #include <lua.hpp>
@@ -40,7 +40,7 @@ static const char *lib_class =
     #include "private/lib_class.lua"
 ;
 
-LuaState::LuaState()
+Lua::Lua()
 {
     m_state = luaL_newstate();
 
@@ -48,13 +48,13 @@ LuaState::LuaState()
     execute(lib_class);
 }
 
-LuaState::~LuaState()
+Lua::~Lua()
 {
     if (m_state)
         lua_close(m_state);
 }
 
-bool LuaState::loadFile(const std::string &fileName)
+bool Lua::executeFile(const std::string &fileName)
 {
     if (luaL_dofile(m_state, fileName.c_str()) == LUA_OK)
         return true;
@@ -67,7 +67,7 @@ bool LuaState::loadFile(const std::string &fileName)
     return false;
 }
 
-bool LuaState::execute(const std::string &script)
+bool Lua::execute(const std::string &script)
 {
     if (luaL_dostring(m_state, script.c_str()) == LUA_OK)
         return true;
@@ -76,13 +76,13 @@ bool LuaState::execute(const std::string &script)
     return false;
 }
 
-void LuaState::setGlobal(const std::string &name, const LuaValue &value)
+void Lua::setValue(const std::string &name, const LuaValue &value)
 {
     pushLuaValue(m_state, value);
     lua_setglobal(m_state, name.c_str());
 }
 
-LuaValue LuaState::getGlobal(const std::string &name, LuaValue::Type type)
+LuaValue Lua::getValue(const std::string &name, LuaValue::Type type)
 {
     lua_getglobal(m_state, name.c_str());
     LuaValue value = toLuaValue(m_state, type, 1);
@@ -92,12 +92,49 @@ LuaValue LuaState::getGlobal(const std::string &name, LuaValue::Type type)
     return value;
 }
 
-void LuaState::call(const std::vector<std::string> &names, const LuaValueVector &values)
+void Lua::createTable(const std::string &table, const LuaRegVector &statics, const LuaRegVector &members)
+{
+    lua_newtable(m_state);
+    LuaRegVector_forEach(m_state, statics);
+    lua_setglobal(m_state, table.c_str());
+
+    if (!members.empty())
+    {
+        luaL_newmetatable(m_state, table.c_str());
+
+        lua_pushvalue(m_state, -1);
+        lua_setfield(m_state, -2, "__index");
+
+        LuaRegVector_forEach(m_state, members);
+    }
+
+    lua_pop(m_state, 1);
+}
+
+void Lua::addToTable(const std::string &table, const std::string &field, const LuaValue &value)
+{
+    lua_getglobal(m_state, table.c_str());
+
+    pushLuaValue(m_state, value);
+    lua_setfield(m_state, -2, field.c_str());
+
+    lua_pop(m_state, 1);
+}
+
+void Lua::addToTable(const std::string &table, const LuaRegVector &statics)
+{
+    lua_getglobal(m_state, table.c_str());
+    LuaRegVector_forEach(m_state, statics);
+
+    lua_pop(m_state, 1);
+}
+
+void Lua::call(const std::vector<std::string> &names, const LuaValueVector &values)
 {
     pcall(m_state, names, values, 0);
 }
 
-LuaValueVector LuaState::call(const std::vector<std::string> &names, const LuaValueVector &values, std::vector<LuaValue::Type> returns)
+LuaValueVector Lua::call(const std::vector<std::string> &names, const LuaValueVector &values, std::vector<LuaValue::Type> returns)
 {
     pcall(m_state, names, values, returns.size());
 
@@ -111,7 +148,7 @@ LuaValueVector LuaState::call(const std::vector<std::string> &names, const LuaVa
     return valueVector;
 }
 
-int LuaState::addDirPath(const std::string &path)
+int Lua::addDirPath(const std::string &path)
 {
     lua_getglobal(m_state, "package");
     lua_getfield(m_state, -1, "path");
@@ -127,24 +164,6 @@ int LuaState::addDirPath(const std::string &path)
     lua_pop(m_state, 1);
 
     return 0;
-}
-
-void LuaState::reg(const std::string &name, const LuaRegVector &functions, const LuaRegVector &methods)
-{
-    lua_newtable(m_state);
-    LuaRegVector_forEach(m_state, functions);
-    lua_setglobal(m_state, name.c_str());
-
-    luaL_newmetatable(m_state, name.c_str());
-
-    if (!methods.empty())
-    {
-        lua_pushvalue(m_state, -1);
-        lua_setfield(m_state, -2, "__index");
-        LuaRegVector_forEach(m_state, methods);
-    }
-
-    lua_pop(m_state, 1);
 }
 
 }

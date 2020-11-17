@@ -39,25 +39,27 @@
 namespace OmicronTK {
 namespace lua {
 
-class OTKLUA_EXPORT LuaState
+class OTKLUA_EXPORT Lua
 {
 public:
-    LuaState();
-    ~LuaState();
+    Lua();
+    ~Lua();
 
-    inline lua_State *state() { return m_state; }
+    inline lua_State *getState() { return m_state; }
 
-    bool loadFile(const std::string &fileName);
+    bool executeFile(const std::string &fileName);
     bool execute(const std::string &script);
 
-    void setGlobal(const std::string &name, const LuaValue &value);
-    LuaValue getGlobal(const std::string &name, LuaValue::Type type);
+    void setValue(const std::string &name, const LuaValue &value);
+    LuaValue getValue(const std::string &name, LuaValue::Type type);
+    void createTable(const std::string &table, const LuaRegVector &statics, const LuaRegVector &members = {});
+    void addToTable(const std::string &table, const std::string &field, const LuaValue &value);
+    void addToTable(const std::string &table, const LuaRegVector &statics);
+
     void call(const std::vector<std::string> &names, const LuaValueVector &values = {});
     LuaValueVector call(const std::vector<std::string> &names, const LuaValueVector &values, std::vector<LuaValue::Type> returns);
 
     int addDirPath(const std::string &path);
-
-    void reg(const std::string &name, const LuaRegVector &functions, const LuaRegVector &methods = {});
 
     template<typename LuaClass>
     inline void requiref()
