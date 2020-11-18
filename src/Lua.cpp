@@ -129,9 +129,9 @@ void Lua::addToTable(const std::string &table, const LuaRegVector &statics)
     lua_pop(m_state, 1);
 }
 
-void Lua::callFunction(const std::string &name, const LuaValueVector &values)
+void Lua::callFunction(const std::string &name, const LuaValueVector &values, size_t returns)
 {
-    pcall(m_state, name, values, 0);
+    pcall(m_state, name, values, returns);
 }
 
 LuaValueVector Lua::callFunction(const std::string &name, const LuaValueVector &values,
@@ -141,9 +141,10 @@ LuaValueVector Lua::callFunction(const std::string &name, const LuaValueVector &
     return pcallReturn(m_state, returns);
 }
 
-void Lua::callTableFunction(const std::string &table, const std::string &field, const LuaValueVector &values)
+void Lua::callTableFunction(const std::string &table, const std::string &field,
+                            const LuaValueVector &values, size_t returns)
 {
-    pcallTable(m_state, false, table, field, values, 0);
+    pcallTable(m_state, false, table, field, values, returns);
 }
 
 LuaValueVector Lua::callTableFunction(const std::string &table, const std::string &field,
@@ -153,9 +154,10 @@ LuaValueVector Lua::callTableFunction(const std::string &table, const std::strin
     return pcallReturn(m_state, returns);
 }
 
-void Lua::callObjectMethod(const std::string &table, const std::string &field, const LuaValueVector &values)
+void Lua::callObjectMethod(const std::string &table, const std::string &field,
+                           const LuaValueVector &values, size_t returns)
 {
-    pcallTable(m_state, true, table, field, values, 0);
+    pcallTable(m_state, true, table, field, values, returns);
 }
 
 LuaValueVector Lua::callObjectMethod(const std::string &table, const std::string &field,

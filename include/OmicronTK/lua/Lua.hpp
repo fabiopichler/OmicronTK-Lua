@@ -56,15 +56,17 @@ public:
     void addToTable(const std::string &table, const std::string &field, const LuaValue &value);
     void addToTable(const std::string &table, const LuaRegVector &statics);
 
-    void callFunction(const std::string &name, const LuaValueVector &values = {});
+    void callFunction(const std::string &name, const LuaValueVector &values = {}, size_t returns = 0);
     LuaValueVector callFunction(const std::string &name, const LuaValueVector &values,
                                 const std::vector<LuaValue::Type> &returns);
 
-    void callTableFunction(const std::string &table, const std::string &field, const LuaValueVector &values = {});
+    void callTableFunction(const std::string &table, const std::string &field,
+                           const LuaValueVector &values = {}, size_t returns = 0);
     LuaValueVector callTableFunction(const std::string &table, const std::string &field,
                                      const LuaValueVector &values, const std::vector<LuaValue::Type> &returns);
 
-    void callObjectMethod(const std::string &table, const std::string &field, const LuaValueVector &values = {});
+    void callObjectMethod(const std::string &table, const std::string &field,
+                          const LuaValueVector &values = {}, size_t returns = 0);
     LuaValueVector callObjectMethod(const std::string &table, const std::string &field,
                                     const LuaValueVector &values, const std::vector<LuaValue::Type> &returns);
 

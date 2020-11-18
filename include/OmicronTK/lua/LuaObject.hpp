@@ -28,6 +28,8 @@ SOFTWARE.
 #include "OmicronTK/lua/util/LuaUtil.hpp"
 #include "OmicronTK/lua/helpers.hpp"
 
+#include <cassert>
+
 namespace OmicronTK {
 namespace lua {
 
@@ -38,6 +40,8 @@ public:
     template<const LuaValue::Type... _types>
     inline static int constructor(lua_State *L)
     {
+        assert (lua_gettop(L) == (sizeof... (_types)));
+
         auto args = argsFunc<_types...>(1, L);
 
         _Class *object = callConstructor(args, std::make_index_sequence<sizeof... (_types)>{});
@@ -50,8 +54,9 @@ public:
     template<typename _Method, const _Method *_method, const LuaValue::Type... _types>
     inline static int method(lua_State *L)
     {
-        _Class *object = LuaUtil::checkUserData<_Class>(L, 1, _className);
+        assert ((lua_gettop(L) - 1) == (sizeof... (_types)));
 
+        _Class *object = LuaUtil::checkUserData<_Class>(L, 1, _className);
         auto args = argsFunc<_types...>(2, L);
 
         callMethod(object, _method, args, std::make_index_sequence<sizeof... (_types)>{});
@@ -62,8 +67,9 @@ public:
     template<typename _Method, const _Method *_method, const LuaValue::Type _returnType, const LuaValue::Type... _types>
     inline static int method_r(lua_State *L)
     {
-        _Class *object = LuaUtil::checkUserData<_Class>(L, 1, _className);
+        assert ((lua_gettop(L) - 1) == (sizeof... (_types)));
 
+        _Class *object = LuaUtil::checkUserData<_Class>(L, 1, _className);
         auto args = argsFunc<_types...>(2, L);
 
         LuaValue val = callMethod_r(object, _method, args, std::make_index_sequence<sizeof... (_types)>{});
