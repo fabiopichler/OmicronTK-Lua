@@ -25,6 +25,7 @@ public:
         UserData
     };
 
+    LuaValue();
     LuaValue(double value);
     LuaValue(int value);
     LuaValue(const char *value);
@@ -36,6 +37,7 @@ public:
 
     LuaValue::Type type() const;
 
+    void *nil_value() const;
     double number_value() const;
     int integer_value() const;
     const std::string &string_value() const;

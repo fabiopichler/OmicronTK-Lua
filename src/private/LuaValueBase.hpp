@@ -19,19 +19,17 @@ protected:
     friend class LuaValue;
 };
 
-template<typename T>
+template<LuaValue::Type m_type, typename T>
 class Value : public LuaValueBase
 {
 public:
-    Value(T value, LuaValue::Type type)
-        : m_value(value)
-        , m_type(type) {}
+    explicit Value(const T &value) : m_value(value) {}
+    explicit Value(T &&value) : m_value(std::move(value)) {}
 
     LuaValue::Type type() const override { return m_type; }
 
 protected:
     T m_value;
-    LuaValue::Type m_type;
 };
 
 }
