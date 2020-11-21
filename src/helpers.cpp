@@ -89,7 +89,15 @@ LuaValue toLuaValue(lua_State *state, LuaValue::Type type, uint32_t idx)
             return bool(lua_toboolean(state, idx));
 
         case LuaValue::UserData:
-            return lua_touserdata(state, idx);
+        {
+            if (lua_isuserdata(state, idx))
+                return *static_cast<void **>(lua_touserdata(state, idx));
+
+            if (lua_islightuserdata(state, idx))
+                return lua_touserdata(state, idx);
+
+            return static_cast<void *>(nullptr);
+        }
     }
 
     return LuaValue(0);

@@ -52,7 +52,8 @@ public:
 
     void setValue(const std::string &name, const LuaValue &value);
     LuaValue getValue(const std::string &name, LuaValue::Type type);
-    void createTable(const std::string &table, const LuaRegVector &statics, const LuaRegVector &members = {});
+    void createTable(const std::string &table, const LuaRegVector &statics,
+                     const LuaRegVector &members = {}, const LuaRegVector &metamethods = {});
     void addToTable(const std::string &table, const std::string &field, const LuaValue &value);
     void addToTable(const std::string &table, const LuaRegVector &statics);
 

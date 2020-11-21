@@ -92,20 +92,30 @@ LuaValue Lua::getValue(const std::string &name, LuaValue::Type type)
     return value;
 }
 
-void Lua::createTable(const std::string &table, const LuaRegVector &statics, const LuaRegVector &members)
+void Lua::createTable(const std::string &table, const LuaRegVector &statics,
+                      const LuaRegVector &members, const LuaRegVector &metamethods)
 {
-    lua_newtable(m_state);
+    pcall(m_state, "class", { table.c_str() }, 1);
+
     LuaRegVector_forEach(m_state, statics);
-    lua_setglobal(m_state, table.c_str());
 
     if (!members.empty())
+    {
+        lua_getfield(m_state, -1, "proto");
+        LuaRegVector_forEach(m_state, members);
+        lua_pop(m_state, 1);
+    }
+
+    lua_setglobal(m_state, table.c_str());
+
+    if (!metamethods.empty())
     {
         luaL_newmetatable(m_state, table.c_str());
 
         lua_pushvalue(m_state, -1);
         lua_setfield(m_state, -2, "__index");
 
-        LuaRegVector_forEach(m_state, members);
+        LuaRegVector_forEach(m_state, metamethods);
     }
 
     lua_pop(m_state, 1);
