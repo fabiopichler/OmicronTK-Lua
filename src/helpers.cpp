@@ -73,11 +73,11 @@ LuaValue toLuaValue(lua_State *state, LuaValue::Type type, uint32_t idx)
 
         case LuaValue::Number:
             luaL_checktype(state, idx, LUA_TNUMBER);
-            return double(lua_tonumber(state, idx));
+            return double (lua_tonumber(state, idx));
 
         case LuaValue::Integer:
             luaL_checktype(state, idx, LUA_TNUMBER);
-            return int(lua_tointeger(state, idx));
+            return int (lua_tointeger(state, idx));
 
         case LuaValue::String:
             luaL_checktype(state, idx, LUA_TSTRING);
@@ -89,7 +89,7 @@ LuaValue toLuaValue(lua_State *state, LuaValue::Type type, uint32_t idx)
 
         case LuaValue::Boolean:
             luaL_checktype(state, idx, LUA_TBOOLEAN);
-            return bool(lua_toboolean(state, idx));
+            return bool (lua_toboolean(state, idx));
 
         case LuaValue::UserData:
         {
@@ -101,10 +101,9 @@ LuaValue toLuaValue(lua_State *state, LuaValue::Type type, uint32_t idx)
                 return *static_cast<void **>(lua_touserdata(state, -1));
             }
 
-            if (lua_islightuserdata(state, idx))
-                return lua_touserdata(state, idx);
+            luaL_checktype(state, idx, LUA_TLIGHTUSERDATA);
 
-            return static_cast<void *>(nullptr);
+            return lua_touserdata(state, idx);
         }
     }
 
