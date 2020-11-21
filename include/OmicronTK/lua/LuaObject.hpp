@@ -40,24 +40,25 @@ public:
     template<const LuaValue::Type... _types>
     inline static int constructor(lua_State *L)
     {
-        assert (lua_gettop(L) == (sizeof... (_types)));
+        assert ((lua_gettop(L) - 1) == (sizeof... (_types)));
 
-        auto args = argsFunc<_types...>(1, L);
+        luaL_checktype(L, 1, LUA_TTABLE);
 
+        auto args = argsFunc<_types...>(L);
         _Class *object = callConstructor(args, std::make_index_sequence<sizeof... (_types)>{});
 
+        lua_settop(L, 1);
         LuaUtil::newUserData<_Class>(L, _className, object);
+        lua_setfield(L, -2, "__userdata");
 
-        return 1;
+        return 0;
     }
 
     template<typename _Method, const _Method *_method, const LuaValue::Type... _types>
     inline static int method(lua_State *L)
     {
-        assert ((lua_gettop(L) - 1) == (sizeof... (_types)));
-
-        _Class *object = LuaUtil::checkUserData<_Class>(L, 1, _className);
-        auto args = argsFunc<_types...>(2, L);
+        _Class *object = getUserData<_types...>(L);
+        auto args = argsFunc<_types...>(L);
 
         callMethod(object, _method, args, std::make_index_sequence<sizeof... (_types)>{});
 
@@ -67,10 +68,8 @@ public:
     template<typename _Method, const _Method *_method, const LuaValue::Type _returnType, const LuaValue::Type... _types>
     inline static int method_r(lua_State *L)
     {
-        assert ((lua_gettop(L) - 1) == (sizeof... (_types)));
-
-        _Class *object = LuaUtil::checkUserData<_Class>(L, 1, _className);
-        auto args = argsFunc<_types...>(2, L);
+        _Class *object = getUserData<_types...>(L);
+        auto args = argsFunc<_types...>(L);
 
         LuaValue val = callMethod_r(object, _method, args, std::make_index_sequence<sizeof... (_types)>{});
 
@@ -81,12 +80,23 @@ public:
 
 private:
     template<const LuaValue::Type... _types>
-    inline static auto argsFunc(const uint32_t firstIndex, lua_State *L)
+    inline static _Class *getUserData(lua_State *L)
+    {
+        assert ((lua_gettop(L) - 1) == (sizeof... (_types)));
+
+        luaL_checktype(L, 1, LUA_TTABLE);
+        lua_getfield(L, 1, "__userdata");
+
+        return LuaUtil::checkUserData<_Class>(L, -1, _className);
+    }
+
+    template<const LuaValue::Type... _types>
+    inline static auto argsFunc(lua_State *L)
     {
         const LuaValue::Type types[] { _types... };
 
-        return [types, firstIndex, L] (int i) {
-            return toLuaValue(L, types[i], i + firstIndex);
+        return [types, L] (int i) {
+            return toLuaValue(L, types[i], i + 2);
         };
     }
 

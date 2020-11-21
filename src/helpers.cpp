@@ -65,33 +65,41 @@ LuaValue toLuaValue(lua_State *state, LuaValue::Type type, uint32_t idx)
 {
     switch (type) {
         case LuaValue::Undefined:
+        break;
+
         case LuaValue::Nil:
+            luaL_checktype(state, idx, LUA_TNIL);
         break;
 
         case LuaValue::Number:
+            luaL_checktype(state, idx, LUA_TNUMBER);
             return double(lua_tonumber(state, idx));
 
         case LuaValue::Integer:
+            luaL_checktype(state, idx, LUA_TNUMBER);
             return int(lua_tointeger(state, idx));
 
         case LuaValue::String:
-        {
-            if (lua_isnil(state, idx))
-                return EmptyString;
-
+            luaL_checktype(state, idx, LUA_TSTRING);
             return lua_tostring(state, idx);
-        }
 
         case LuaValue::CFunction:
+            luaL_checktype(state, idx, LUA_TFUNCTION);
             return lua_tocfunction(state, idx);
 
         case LuaValue::Boolean:
+            luaL_checktype(state, idx, LUA_TBOOLEAN);
             return bool(lua_toboolean(state, idx));
 
         case LuaValue::UserData:
         {
-            if (lua_isuserdata(state, idx))
-                return *static_cast<void **>(lua_touserdata(state, idx));
+            if (lua_istable(state, idx))
+            {
+                lua_getfield(state, 1, "__userdata");
+                luaL_checktype(state, -1, LUA_TUSERDATA);
+
+                return *static_cast<void **>(lua_touserdata(state, -1));
+            }
 
             if (lua_islightuserdata(state, idx))
                 return lua_touserdata(state, idx);
@@ -100,7 +108,7 @@ LuaValue toLuaValue(lua_State *state, LuaValue::Type type, uint32_t idx)
         }
     }
 
-    return LuaValue(0);
+    return LuaValue();
 }
 
 void pushLuaValue(lua_State *state, const LuaValue &value)
