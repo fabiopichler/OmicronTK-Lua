@@ -49,7 +49,6 @@ public:
 
         lua_settop(L, 1);
         LuaUtil::newUserData<_Class>(L, _className, object);
-        lua_setfield(L, -2, "__userdata");
 
         return 0;
     }
@@ -84,10 +83,7 @@ private:
     {
         assert ((lua_gettop(L) - 1) == (sizeof... (_types)));
 
-        luaL_checktype(L, 1, LUA_TTABLE);
-        lua_getfield(L, 1, "__userdata");
-
-        return LuaUtil::checkUserData<_Class>(L, -1, _className);
+        return LuaUtil::checkUserData<_Class>(L, 1, _className);
     }
 
     template<const LuaValue::Type... _types>

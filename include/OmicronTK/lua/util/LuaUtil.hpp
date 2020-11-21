@@ -45,13 +45,18 @@ public:
     static inline void newUserData(lua_State *L, const char *tableName, void *userdata)
     {
         *static_cast<void **>(lua_newuserdata(L, sizeof(LuaClass *))) = userdata;
+
         luaL_setmetatable(L, tableName);
+        lua_setfield(L, -2, "__userdata");
     }
 
     template<typename LuaClass>
     static inline LuaClass *checkUserData(lua_State *L, int ud, const char *tableName)
     {
-        return *static_cast<LuaClass **>(luaL_checkudata(L, ud, tableName));
+        luaL_checktype(L, ud, LUA_TTABLE);
+        lua_getfield(L, ud, "__userdata");
+
+        return *static_cast<LuaClass **>(luaL_checkudata(L, -1, tableName));
     }
 
     template<typename LuaClass, const char *tableName>
@@ -64,7 +69,7 @@ private:
     template<typename LuaClass, const char *tableName>
     static inline int luaCFunc__gc(lua_State *L)
     {
-        LuaClass *userdata = checkUserData<LuaClass>(L, 1, tableName);
+        LuaClass *userdata = *static_cast<LuaClass **>(luaL_checkudata(L, -1, tableName));
 
         if (userdata)
         {
