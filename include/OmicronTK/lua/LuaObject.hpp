@@ -25,7 +25,7 @@ SOFTWARE.
 #pragma once
 
 #include "OmicronTK/lua/LuaValue.hpp"
-#include "OmicronTK/lua/util/LuaUtil.hpp"
+#include "OmicronTK/lua/util/LuaObjUtil.hpp"
 #include "OmicronTK/lua/helpers.hpp"
 
 #include <cassert>
@@ -36,6 +36,8 @@ namespace lua {
 template<typename _Class, const char *_className>
 class LuaObject
 {
+    using ObjUtil = LuaObjUtil<_Class, _className>;
+
 public:
     template<const LuaValue::Type... _types>
     inline static int constructor(lua_State *L)
@@ -47,8 +49,8 @@ public:
         auto args = argsFunc<_types...>(L);
         _Class *object = callConstructor(args, std::make_index_sequence<sizeof... (_types)>{});
 
-        lua_settop(L, 1);
-        LuaUtil::newUserData<_Class>(L, _className, object);
+        lua_pushvalue(L, 1);
+        ObjUtil::newUserData(L, object);
 
         return 0;
     }
@@ -77,13 +79,28 @@ public:
         return 1;
     }
 
+    inline static int __gc(lua_State *L)
+    {
+        _Class *object = *static_cast<_Class **>(luaL_checkudata(L, -1, _className));
+
+        if (object)
+        {
+            delete object;
+            return 0;
+        }
+
+        lua_pushstring(L, "C++ object garbage failure");
+        lua_error(L);
+        return 0;
+    }
+
 private:
     template<const LuaValue::Type... _types>
     inline static _Class *getUserData(lua_State *L)
     {
         assert ((lua_gettop(L) - 1) == (sizeof... (_types)));
 
-        return LuaUtil::checkUserData<_Class>(L, 1, _className);
+        return ObjUtil::checkUserData(L, 1);
     }
 
     template<const LuaValue::Type... _types>

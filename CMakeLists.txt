@@ -39,6 +39,7 @@ add_definitions(-DOTKLUA_BUILD_CORE_LIB)
 set(SRC_FILES
     include/OmicronTK/lua/global.h
     include/OmicronTK/lua/defines.hpp
+    include/OmicronTK/lua/util/LuaObjUtil.hpp
     include/OmicronTK/lua/util/LuaUtil.hpp
     include/OmicronTK/lua/Lua.hpp
     include/OmicronTK/lua/LuaValue.hpp

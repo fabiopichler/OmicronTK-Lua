@@ -31,6 +31,7 @@
 
 #include "OmicronTK/lua/global.h"
 #include "OmicronTK/lua/LuaValue.hpp"
+#include "OmicronTK/lua/LuaObject.hpp"
 
 #include <lua.hpp>
 #include <vector>
@@ -38,50 +39,21 @@
 namespace OmicronTK {
 namespace lua {
 
+template<typename _Class, const char *_className>
 class OTKLUA_EXPORT LuaUtil
 {
+    using Object = LuaObject<_Class, _className>;
+
 public:
-    template<typename LuaClass>
-    static inline void newUserData(lua_State *L, const char *tableName, void *userdata)
+    /*template<const LuaValue::Type... _types>
+    inline static LuaReg constructor()
     {
-        *static_cast<void **>(lua_newuserdata(L, sizeof(LuaClass *))) = userdata;
+        return LuaReg { "constructor", Object::constructor<_types...> };
+    }*/
 
-        luaL_setmetatable(L, tableName);
-        lua_setfield(L, -2, "__userdata");
-    }
-
-    template<typename LuaClass>
-    static inline LuaClass *checkUserData(lua_State *L, int ud, const char *tableName)
-    {
-        luaL_checktype(L, ud, LUA_TTABLE);
-        lua_getfield(L, ud, "__userdata");
-
-        return *static_cast<LuaClass **>(luaL_checkudata(L, -1, tableName));
-    }
-
-    template<typename LuaClass, const char *tableName>
     static inline LuaReg __gc()
     {
-        return LuaReg { "__gc", luaCFunc__gc<LuaClass, tableName> };
-    }
-
-private:
-    template<typename LuaClass, const char *tableName>
-    static inline int luaCFunc__gc(lua_State *L)
-    {
-        LuaClass *userdata = *static_cast<LuaClass **>(luaL_checkudata(L, -1, tableName));
-
-        if (userdata)
-        {
-            delete userdata;
-        }
-        else
-        {
-            lua_pushstring(L, "C++ object garbage failure");
-            lua_error(L);
-        }
-
-        return 0;
+        return LuaReg { "__gc", Object::__gc };
     }
 };
 
