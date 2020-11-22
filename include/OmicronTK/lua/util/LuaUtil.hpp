@@ -42,19 +42,7 @@ namespace lua {
 template<typename _Class, const char *_className>
 class OTKLUA_EXPORT LuaUtil
 {
-    using Object = LuaObject<_Class, _className>;
-
 public:
-    /*template<const LuaValue::Type... _types>
-    inline static LuaReg constructor()
-    {
-        return LuaReg { "constructor", Object::constructor<_types...> };
-    }*/
-
-    static inline LuaReg __gc()
-    {
-        return LuaReg { "__gc", Object::__gc };
-    }
 };
 
 }

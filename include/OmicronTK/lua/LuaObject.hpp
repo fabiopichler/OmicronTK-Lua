@@ -94,6 +94,21 @@ public:
         return 0;
     }
 
+    class util
+    {
+    public:
+        template<const LuaValue::Type... _types>
+        inline static LuaReg constructor()
+        {
+            return LuaReg { "constructor", LuaObject::constructor<_types...> };
+        }
+
+        static inline LuaReg __gc()
+        {
+            return LuaReg { "__gc", LuaObject::__gc };
+        }
+    };
+
 private:
     template<const LuaValue::Type... _types>
     inline static _Class *getUserData(lua_State *L)
