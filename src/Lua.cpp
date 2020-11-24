@@ -115,12 +115,7 @@ void Lua::setValue(const std::string &global, const LuaValue &value)
 
 void Lua::setValue(const std::string &table, const std::string &field, const LuaValue &value)
 {
-    lua_getglobal(m_state, table.c_str());
-
-    pushLuaValue(m_state, value);
-    lua_setfield(m_state, -2, field.c_str());
-
-    lua_pop(m_state, 1);
+    setValues(table, { {field.c_str(), value} });
 }
 
 void Lua::setValues(const std::string &table, const LuaRegVector &values)
@@ -132,13 +127,7 @@ void Lua::setValues(const std::string &table, const LuaRegVector &values)
 
 void Lua::addToPrototype(const std::string &table, const std::string &field, const LuaValue &value)
 {
-    lua_getglobal(m_state, table.c_str());
-    lua_getfield(m_state, -1, "proto");
-
-    pushLuaValue(m_state, value);
-    lua_setfield(m_state, -2, field.c_str());
-
-    lua_pop(m_state, 1);
+    addToPrototype(table, { {field.c_str(), value} });
 }
 
 void Lua::addToPrototype(const std::string &table, const LuaRegVector &values)
