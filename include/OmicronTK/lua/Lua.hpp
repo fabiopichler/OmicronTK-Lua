@@ -35,6 +35,7 @@
 
 #include "OmicronTK/lua/defines.hpp"
 #include "OmicronTK/lua/LuaValue.hpp"
+#include "OmicronTK/lua/LuaClass.hpp"
 
 namespace OmicronTK {
 namespace lua {
@@ -51,8 +52,7 @@ public:
     bool execute(const std::string &script);
 
     void createTable(const std::string &name, const LuaRegVector &values = {});
-    void createClass(const std::string &name, const LuaRegVector &statics,
-                     const LuaRegVector &members = {}, const LuaRegVector &metamethods = {});
+    void createClass(const LuaClass &luaClass);
 
     void setValue(const std::string &global, const LuaValue &value);
     void setValue(const std::string &table, const std::string &field, const LuaValue &value);

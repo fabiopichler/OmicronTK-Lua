@@ -83,26 +83,25 @@ void Lua::createTable(const std::string &name, const LuaRegVector &values)
     lua_setglobal(m_state, name.c_str());
 }
 
-void Lua::createClass(const std::string &name, const LuaRegVector &statics,
-                      const LuaRegVector &members, const LuaRegVector &metamethods)
+void Lua::createClass(const LuaClass &luaClass)
 {
-    pcall(m_state, "class", { name.c_str() }, 1);
+    pcall(m_state, "class", { luaClass.m_name.c_str() }, 1);
 
-    LuaRegVector_forEach(m_state, statics);
+    LuaRegVector_forEach(m_state, luaClass.m_statics);
 
-    if (!members.empty())
+    if (!luaClass.m_members.empty())
     {
         lua_getfield(m_state, -1, "proto");
-        LuaRegVector_forEach(m_state, members);
+        LuaRegVector_forEach(m_state, luaClass.m_members);
         lua_pop(m_state, 1);
     }
 
-    lua_setglobal(m_state, name.c_str());
-    luaL_newmetatable(m_state, name.c_str());
+    lua_setglobal(m_state, luaClass.m_name.c_str());
+    luaL_newmetatable(m_state, luaClass.m_name.c_str());
 
     lua_pushvalue(m_state, -1);
     lua_setfield(m_state, -2, "__index");
-    LuaRegVector_forEach(m_state, metamethods);
+    LuaRegVector_forEach(m_state, luaClass.m_metamethods);
 
     lua_pop(m_state, 1);
 }
