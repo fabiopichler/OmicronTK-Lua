@@ -45,17 +45,21 @@ public:
     Lua();
     ~Lua();
 
-    inline lua_State *getState() { return m_state; }
+    inline lua_State *state() { return m_state; }
 
     bool executeFile(const std::string &fileName);
     bool execute(const std::string &script);
 
-    void setValue(const std::string &name, const LuaValue &value);
-    LuaValue getValue(const std::string &name, LuaValue::Type type);
-    void createTable(const std::string &table, const LuaRegVector &statics,
+    void setValue(const std::string &global, const LuaValue &value);
+    void setValue(const std::string &table, const std::string &field, const LuaValue &value);
+    void setValues(const std::string &table, const LuaRegVector &values);
+
+    LuaValue getValue(const std::string &global, LuaValue::Type type);
+    LuaValue getValue(const std::string &table, const std::string &field, LuaValue::Type type);
+
+    void createTable(const std::string &name, const LuaRegVector &values = {});
+    void createClass(const std::string &name, const LuaRegVector &statics,
                      const LuaRegVector &members = {}, const LuaRegVector &metamethods = {});
-    void addToTable(const std::string &table, const std::string &field, const LuaValue &value);
-    void addToTable(const std::string &table, const LuaRegVector &statics);
 
     void callFunction(const std::string &name, const LuaValueVector &values = {}, size_t returns = 0);
     LuaValueVector callFunction(const std::string &name, const LuaValueVector &values,

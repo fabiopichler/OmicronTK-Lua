@@ -103,7 +103,7 @@ public:
             return LuaReg { "constructor", LuaObject::constructor<_types...> };
         }
 
-        static inline LuaReg __gc()
+        inline static LuaReg __gc()
         {
             return LuaReg { "__gc", LuaObject::__gc };
         }
