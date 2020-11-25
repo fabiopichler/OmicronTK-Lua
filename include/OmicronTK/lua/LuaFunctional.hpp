@@ -50,13 +50,13 @@ private:
     template<typename _Func, typename _ArgsFunc, std::size_t... I>
     inline static void callFunction(_Func&& _func, _ArgsFunc&& _args, std::index_sequence<I...>)
     {
-        _func(_args(I)...);
+        (*_func)(_args(I)...);
     }
 
     template<typename _Func, typename _ArgsFunc, std::size_t... I>
     inline static auto callFunction_r(_Func&& _func, _ArgsFunc&& _args, std::index_sequence<I...>)
     {
-        return std::forward<LuaValue>(_func(_args(I)...));
+        return std::forward<LuaValue>((*_func)(_args(I)...));
     }
 };
 
