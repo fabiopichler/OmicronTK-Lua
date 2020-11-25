@@ -25,7 +25,9 @@ public:
         UserData
     };
 
-    LuaValue();
+    LuaValue(LuaValue &&value);
+    LuaValue(const LuaValue &value);
+    LuaValue(); // nil
     LuaValue(double value);
     LuaValue(int value);
     LuaValue(const char *value);
@@ -52,6 +54,12 @@ public:
     inline operator LuaCFunction () const { return cfunction_value(); }
     inline operator bool () const { return boolean_value(); }
     inline operator void *() const { return userdata_value(); }
+
+    // ---- tests ----
+    LuaValue(unsigned int value);
+    inline operator unsigned int () const { return unsigned(integer_value()); }
+    inline operator unsigned long () const { return unsigned(integer_value()); }
+    // ---------------
 
 private:
     std::shared_ptr<LuaValueBase> m_ptr;

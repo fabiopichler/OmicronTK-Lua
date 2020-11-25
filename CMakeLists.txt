@@ -53,7 +53,7 @@ set(SRC_FILES
     src/Lua.cpp
     src/CallbackInfo.cpp
     include/OmicronTK/lua/CallbackInfo.hpp
-    src/LuaObject.cpp
+    src/LuaClass.cpp
     include/OmicronTK/lua/LuaObject.hpp
     include/OmicronTK/lua/LuaClass.hpp
     include/OmicronTK/lua/LuaFunctional.hpp)

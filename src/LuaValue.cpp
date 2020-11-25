@@ -56,6 +56,11 @@ public:
     void *userdata_value() const override { return m_value; }
 };
 
+// test
+LuaValue::LuaValue(unsigned int value) : m_ptr(std::make_shared<LuaInteger>(value)) {}
+
+LuaValue::LuaValue(LuaValue &&value) : m_ptr(value.m_ptr) {}
+LuaValue::LuaValue(const LuaValue &value) : m_ptr(value.m_ptr) {}
 LuaValue::LuaValue() : m_ptr(std::make_shared<LuaNil>()) {}
 LuaValue::LuaValue(double value) : m_ptr(std::make_shared<LuaNumber>(value)) {}
 LuaValue::LuaValue(int value) : m_ptr(std::make_shared<LuaInteger>(value)) {}

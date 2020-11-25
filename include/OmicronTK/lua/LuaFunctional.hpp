@@ -43,7 +43,7 @@ private:
         const LuaValue::Type types[] { _types... };
 
         return [types, L] (int i) {
-            return toLuaValue(L, types[i], i + 1);
+            return std::forward<LuaValue>(toLuaValue(L, types[i], i + 1));
         };
     }
 
@@ -54,7 +54,7 @@ private:
     }
 
     template<typename _Func, typename _ArgsFunc, std::size_t... I>
-    inline static auto callFunction_r(_Func&& _func, _ArgsFunc&& _args, std::index_sequence<I...>)
+    inline static LuaValue callFunction_r(_Func&& _func, _ArgsFunc&& _args, std::index_sequence<I...>)
     {
         return std::forward<LuaValue>((*_func)(_args(I)...));
     }

@@ -124,7 +124,7 @@ private:
         const LuaValue::Type types[] { _types... };
 
         return [types, L] (int i) {
-            return toLuaValue(L, types[i], i + 2);
+            return std::forward<LuaValue>(toLuaValue(L, types[i], i + 2));
         };
     }
 
