@@ -6,27 +6,27 @@
 namespace OmicronTK {
 namespace lua {
 
-void LuaRegVector_forEach(lua_State *L, const LuaRegVector &values)
+void LuaRegVector_forEach(lua_State *L, const RegVector &values)
 {
     for (const LuaReg &value : values)
     {
-        pushLuaValue(L, value.value);
+        pushValue(L, value.value);
         lua_setfield(L, -2, value.name);
     }
 }
 
-void pcall(lua_State *state, const std::string &name, const LuaValueVector &values, size_t returnsSize)
+void pcall(lua_State *state, const std::string &name, const ValueVector &values, size_t returnsSize)
 {
     lua_getglobal(state, name.c_str());
 
     for (const auto &value : values)
-        pushLuaValue(state, value);
+        pushValue(state, value);
 
     lua_pcall(state, values.size(), returnsSize, 0);
 }
 
 void pcallTable(lua_State *state, bool isObject, const std::string &table, const std::string &field,
-                const LuaValueVector &values, size_t returnsSize)
+                const ValueVector &values, size_t returnsSize)
 {
     lua_getglobal(state, table.c_str());
     lua_getfield(state, -1, field.c_str());
@@ -44,54 +44,51 @@ void pcallTable(lua_State *state, bool isObject, const std::string &table, const
     }
 
     for (const auto &value : values)
-        pushLuaValue(state, value);
+        pushValue(state, value);
 
     lua_pcall(state, valuesSize, returnsSize, 0);
 }
 
-LuaValueVector pcallReturn(lua_State *state, const std::vector<LuaValue::Type> &returns)
+ValueVector pcallReturn(lua_State *state, const std::vector<Value::Type> &returns)
 {
-    LuaValueVector valueVector;
+    ValueVector valueVector;
 
     for (size_t idx = 0; idx < returns.size(); ++idx)
-        valueVector.push_back(toLuaValue(state, returns[idx], idx + 1));
+        valueVector.push_back(toValue(state, returns[idx], idx + 1));
 
     lua_settop(state, 0);
 
     return valueVector;
 }
 
-LuaValue toLuaValue(lua_State *state, LuaValue::Type type, uint32_t idx)
+Value toValue(lua_State *state, Value::Type type, uint32_t idx)
 {
     switch (type) {
-        case LuaValue::Undefined:
-        break;
-
-        case LuaValue::Nil:
+        case Value::Nil:
             luaL_checktype(state, idx, LUA_TNIL);
         break;
 
-        case LuaValue::Number:
+        case Value::Number:
             luaL_checktype(state, idx, LUA_TNUMBER);
             return double (lua_tonumber(state, idx));
 
-        case LuaValue::Integer:
+        case Value::Integer:
             luaL_checktype(state, idx, LUA_TNUMBER);
             return int (lua_tointeger(state, idx));
 
-        case LuaValue::String:
+        case Value::String:
             luaL_checktype(state, idx, LUA_TSTRING);
             return lua_tostring(state, idx);
 
-        case LuaValue::CFunction:
+        case Value::CFunction:
             luaL_checktype(state, idx, LUA_TFUNCTION);
             return lua_tocfunction(state, idx);
 
-        case LuaValue::Boolean:
+        case Value::Boolean:
             luaL_checktype(state, idx, LUA_TBOOLEAN);
             return bool (lua_toboolean(state, idx));
 
-        case LuaValue::UserData:
+        case Value::UserData:
         {
             if (lua_istable(state, idx))
             {
@@ -107,40 +104,37 @@ LuaValue toLuaValue(lua_State *state, LuaValue::Type type, uint32_t idx)
         }
     }
 
-    return LuaValue();
+    return Value();
 }
 
-void pushLuaValue(lua_State *state, const LuaValue &value)
+void pushValue(lua_State *state, const Value &value)
 {
     switch (value.type()) {
-        case LuaValue::Undefined:
-        break;
-
-        case LuaValue::Nil:
+        case Value::Nil:
             lua_pushnil(state);
         break;
 
-        case LuaValue::Number:
+        case Value::Number:
             lua_pushnumber(state, value.number_value());
         break;
 
-        case LuaValue::Integer:
+        case Value::Integer:
             lua_pushinteger(state, value.integer_value());
         break;
 
-        case LuaValue::String:
+        case Value::String:
             lua_pushstring(state, value.string_value().c_str());
         break;
 
-        case LuaValue::CFunction:
+        case Value::CFunction:
             lua_pushcfunction(state, value.cfunction_value());
         break;
 
-        case LuaValue::Boolean:
+        case Value::Boolean:
             lua_pushboolean(state, value.boolean_value());
         break;
 
-        case LuaValue::UserData:
+        case Value::UserData:
             lua_pushlightuserdata(state, value.userdata_value());
         break;
     }

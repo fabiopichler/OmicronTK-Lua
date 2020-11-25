@@ -6,7 +6,7 @@ namespace OmicronTK {
 namespace lua {
 
 template<typename _Class, const char *_className>
-class LuaObjUtil
+class ObjectUtil
 {
 public:
     static inline void newUserData(lua_State *L, _Class *userdata)

@@ -24,8 +24,8 @@ SOFTWARE.
 
 #pragma once
 
-#include "OmicronTK/lua/LuaValue.hpp"
-#include "OmicronTK/lua/util/LuaObjUtil.hpp"
+#include "OmicronTK/lua/Value.hpp"
+#include "OmicronTK/lua/util/ObjectUtil.hpp"
 #include "OmicronTK/lua/helpers.hpp"
 
 #include <cassert>
@@ -34,12 +34,12 @@ namespace OmicronTK {
 namespace lua {
 
 template<typename _Class, const char *_className>
-class LuaObject
+class Object
 {
-    using ObjUtil = LuaObjUtil<_Class, _className>;
+    using ObjUtil = ObjectUtil<_Class, _className>;
 
 public:
-    template<const LuaValue::Type... _types>
+    template<const Value::Type... _types>
     inline static int constructor(lua_State *L)
     {
         assert ((lua_gettop(L) - 1) == (sizeof... (_types)));
@@ -55,7 +55,7 @@ public:
         return 0;
     }
 
-    template<typename _Method, const _Method *_method, const LuaValue::Type... _types>
+    template<typename _Method, const _Method *_method, const Value::Type... _types>
     inline static int method(lua_State *L)
     {
         _Class *object = getUserData<_types...>(L);
@@ -66,15 +66,15 @@ public:
         return 0;
     }
 
-    template<typename _Method, const _Method *_method, const LuaValue::Type _returnType, const LuaValue::Type... _types>
+    template<typename _Method, const _Method *_method, const Value::Type _returnType, const Value::Type... _types>
     inline static int method_r(lua_State *L)
     {
         _Class *object = getUserData<_types...>(L);
         auto args = argsFunc<_types...>(L);
 
-        LuaValue val = callMethod_r(object, _method, args, std::make_index_sequence<sizeof... (_types)>{});
+        Value val = callMethod_r(object, _method, args, std::make_index_sequence<sizeof... (_types)>{});
 
-        pushLuaValue(L, val);
+        pushValue(L, val);
 
         return 1;
     }
@@ -97,20 +97,20 @@ public:
     class util
     {
     public:
-        template<const LuaValue::Type... _types>
+        template<const Value::Type... _types>
         inline static LuaReg constructor()
         {
-            return LuaReg { "constructor", LuaObject::constructor<_types...> };
+            return LuaReg { "constructor", Object::constructor<_types...> };
         }
 
         inline static LuaReg __gc()
         {
-            return LuaReg { "__gc", LuaObject::__gc };
+            return LuaReg { "__gc", Object::__gc };
         }
     };
 
 private:
-    template<const LuaValue::Type... _types>
+    template<const Value::Type... _types>
     inline static _Class *getUserData(lua_State *L)
     {
         assert ((lua_gettop(L) - 1) == (sizeof... (_types)));
@@ -118,13 +118,13 @@ private:
         return ObjUtil::checkUserData(L, 1);
     }
 
-    template<const LuaValue::Type... _types>
+    template<const Value::Type... _types>
     inline static auto argsFunc(lua_State *L)
     {
-        const LuaValue::Type types[] { _types... };
+        const Value::Type types[] { _types... };
 
         return [types, L] (int i) {
-            return std::forward<LuaValue>(toLuaValue(L, types[i], i + 2));
+            return std::forward<Value>(toValue(L, types[i], i + 2));
         };
     }
 
@@ -143,7 +143,7 @@ private:
     template<typename _Method, typename _ArgsFunc, std::size_t... I>
     inline static auto callMethod_r(_Class *_object, _Method&& _method, _ArgsFunc&& _args, std::index_sequence<I...>)
     {
-        return std::forward<LuaValue>((_object->*(*_method))(_args(I)...));
+        return std::forward<Value>((_object->*(*_method))(_args(I)...));
     }
 };
 

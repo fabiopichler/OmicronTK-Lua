@@ -9,13 +9,12 @@
 namespace OmicronTK {
 namespace lua {
 
-class LuaValueBase;
-class LuaValue
+class ValuePrivateBase;
+class Value
 {
 public:
     enum Type
     {
-        Undefined,
         Nil,
         Number,
         Integer,
@@ -25,19 +24,19 @@ public:
         UserData
     };
 
-    LuaValue(LuaValue &&value);
-    LuaValue(const LuaValue &value);
-    LuaValue(); // nil
-    LuaValue(double value);
-    LuaValue(int value);
-    LuaValue(const char *value);
-    LuaValue(const std::string &value);
-    LuaValue(LuaCFunction value);
-    LuaValue(LuaCppFunction value);
-    LuaValue(bool value);
-    LuaValue(void *value);
+    Value(Value &&value);
+    Value(const Value &value);
+    Value(); // nil
+    Value(double value);
+    Value(int value);
+    Value(const char *value);
+    Value(const std::string &value);
+    Value(LuaCFunction value);
+    Value(LuaCppFunction value);
+    Value(bool value);
+    Value(void *value);
 
-    LuaValue::Type type() const;
+    Value::Type type() const;
 
     void *nil_value() const;
     double number_value() const;
@@ -56,24 +55,24 @@ public:
     inline operator void *() const { return userdata_value(); }
 
     // ---- tests ----
-    LuaValue(unsigned int value);
+    Value(unsigned int value);
     inline operator unsigned int () const { return unsigned(integer_value()); }
     inline operator unsigned long () const { return unsigned(integer_value()); }
     // ---------------
 
 private:
-    std::shared_ptr<LuaValueBase> m_ptr;
+    std::shared_ptr<ValuePrivateBase> m_ptr;
 };
 
-using LuaValueVector = std::vector<LuaValue>;
+using ValueVector = std::vector<Value>;
 
 struct LuaReg
 {
     const char *name;
-    LuaValue value;
+    Value value;
 };
 
-using LuaRegVector = std::vector<LuaReg>;
+using RegVector = std::vector<LuaReg>;
 
 }
 }

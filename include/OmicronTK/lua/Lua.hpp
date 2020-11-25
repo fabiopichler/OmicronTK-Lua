@@ -34,8 +34,8 @@
 #include <string>
 
 #include "OmicronTK/lua/defines.hpp"
-#include "OmicronTK/lua/LuaValue.hpp"
-#include "OmicronTK/lua/LuaClass.hpp"
+#include "OmicronTK/lua/Value.hpp"
+#include "OmicronTK/lua/Class.hpp"
 
 namespace OmicronTK {
 namespace lua {
@@ -51,32 +51,32 @@ public:
     bool executeFile(const std::string &fileName);
     bool execute(const std::string &script);
 
-    void createTable(const std::string &name, const LuaRegVector &values = {});
-    void createClass(const LuaClass &luaClass);
+    void createTable(const std::string &name, const RegVector &values = {});
+    void createClass(const Class &luaClass);
 
-    void setValue(const std::string &global, const LuaValue &value);
-    void setValue(const std::string &table, const std::string &field, const LuaValue &value);
-    void setValues(const std::string &table, const LuaRegVector &values);
+    void setValue(const std::string &global, const Value &value);
+    void setValue(const std::string &table, const std::string &field, const Value &value);
+    void setValues(const std::string &table, const RegVector &values);
 
-    void addToPrototype(const std::string &table, const std::string &field, const LuaValue &value);
-    void addToPrototype(const std::string &table, const LuaRegVector &values);
+    void addToPrototype(const std::string &table, const std::string &field, const Value &value);
+    void addToPrototype(const std::string &table, const RegVector &values);
 
-    LuaValue getValue(const std::string &global, LuaValue::Type type);
-    LuaValue getValue(const std::string &table, const std::string &field, LuaValue::Type type);
+    Value getValue(const std::string &global, Value::Type type);
+    Value getValue(const std::string &table, const std::string &field, Value::Type type);
 
-    void callFunction(const std::string &name, const LuaValueVector &values = {}, size_t returns = 0);
-    LuaValueVector callFunction(const std::string &name, const LuaValueVector &values,
-                                const std::vector<LuaValue::Type> &returns);
+    void callFunction(const std::string &name, const ValueVector &values = {}, size_t returns = 0);
+    ValueVector callFunction(const std::string &name, const ValueVector &values,
+                                const std::vector<Value::Type> &returns);
 
     void callTableFunction(const std::string &table, const std::string &field,
-                           const LuaValueVector &values = {}, size_t returns = 0);
-    LuaValueVector callTableFunction(const std::string &table, const std::string &field,
-                                     const LuaValueVector &values, const std::vector<LuaValue::Type> &returns);
+                           const ValueVector &values = {}, size_t returns = 0);
+    ValueVector callTableFunction(const std::string &table, const std::string &field,
+                                     const ValueVector &values, const std::vector<Value::Type> &returns);
 
     void callObjectMethod(const std::string &table, const std::string &field,
-                          const LuaValueVector &values = {}, size_t returns = 0);
-    LuaValueVector callObjectMethod(const std::string &table, const std::string &field,
-                                    const LuaValueVector &values, const std::vector<LuaValue::Type> &returns);
+                          const ValueVector &values = {}, size_t returns = 0);
+    ValueVector callObjectMethod(const std::string &table, const std::string &field,
+                                    const ValueVector &values, const std::vector<Value::Type> &returns);
 
     int addDirPath(const std::string &path);
 

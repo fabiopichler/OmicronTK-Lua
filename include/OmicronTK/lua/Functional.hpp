@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OmicronTK/lua/LuaValue.hpp"
+#include "OmicronTK/lua/Value.hpp"
 #include "OmicronTK/lua/helpers.hpp"
 
 #include <lua.hpp>
@@ -9,10 +9,10 @@
 namespace OmicronTK {
 namespace lua {
 
-class LuaFunctional
+class Functional
 {
 public:
-    template<typename _Func, const _Func *_func, const LuaValue::Type... _types>
+    template<typename _Func, const _Func *_func, const Value::Type... _types>
     inline static int function(lua_State *L)
     {
         assert (lua_gettop(L) == (sizeof... (_types)));
@@ -23,27 +23,27 @@ public:
         return 0;
     }
 
-    template<typename _Func, const _Func *_func, const LuaValue::Type _returnType, const LuaValue::Type... _types>
+    template<typename _Func, const _Func *_func, const Value::Type _returnType, const Value::Type... _types>
     inline static int function_r(lua_State *L)
     {
         assert (lua_gettop(L) == (sizeof... (_types)));
 
         auto args = argsFunc<_types...>(L);
-        LuaValue val = callFunction_r(_func, args, std::make_index_sequence<sizeof... (_types)>{});
+        Value val = callFunction_r(_func, args, std::make_index_sequence<sizeof... (_types)>{});
 
-        pushLuaValue(L, val);
+        pushValue(L, val);
 
         return 1;
     }
 
 private:
-    template<const LuaValue::Type... _types>
+    template<const Value::Type... _types>
     inline static auto argsFunc(lua_State *L)
     {
-        const LuaValue::Type types[] { _types... };
+        const Value::Type types[] { _types... };
 
         return [types, L] (int i) {
-            return std::forward<LuaValue>(toLuaValue(L, types[i], i + 1));
+            return std::forward<Value>(toValue(L, types[i], i + 1));
         };
     }
 
@@ -54,9 +54,9 @@ private:
     }
 
     template<typename _Func, typename _ArgsFunc, std::size_t... I>
-    inline static LuaValue callFunction_r(_Func&& _func, _ArgsFunc&& _args, std::index_sequence<I...>)
+    inline static Value callFunction_r(_Func&& _func, _ArgsFunc&& _args, std::index_sequence<I...>)
     {
-        return std::forward<LuaValue>((*_func)(_args(I)...));
+        return std::forward<Value>((*_func)(_args(I)...));
     }
 };
 
