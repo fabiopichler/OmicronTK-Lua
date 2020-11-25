@@ -11,6 +11,9 @@ protected:
     virtual Value::Type type() const;
     virtual double number_value() const;
     virtual int integer_value() const;
+    virtual unsigned int uint_value() const;
+    virtual long long_value() const;
+    virtual unsigned long ulong_value() const;
     virtual const std::string &string_value() const;
     virtual LuaCFunction cfunction_value() const;
     virtual bool boolean_value() const;

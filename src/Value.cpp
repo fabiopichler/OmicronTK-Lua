@@ -27,6 +27,27 @@ public:
     int integer_value() const override { return m_value; }
 };
 
+class LuaUInt : public ValuePrivate<Value::UInt, unsigned int>
+{
+public:
+    LuaUInt(unsigned int value) : ValuePrivate(value) {}
+    unsigned int uint_value() const override { return m_value; }
+};
+
+class LuaLong : public ValuePrivate<Value::Long, long>
+{
+public:
+    LuaLong(long value) : ValuePrivate(value) {}
+    long long_value() const override { return m_value; }
+};
+
+class LuaULong : public ValuePrivate<Value::ULong, unsigned long>
+{
+public:
+    LuaULong(unsigned long value) : ValuePrivate(value) {}
+    unsigned long ulong_value() const override { return m_value; }
+};
+
 class LuaString : public ValuePrivate<Value::String, std::string>
 {
 public:
@@ -56,14 +77,14 @@ public:
     void *userdata_value() const override { return m_value; }
 };
 
-// test
-Value::Value(unsigned int value) : m_ptr(std::make_shared<LuaInteger>(value)) {}
-
 Value::Value(Value &&value) : m_ptr(value.m_ptr) {}
 Value::Value(const Value &value) : m_ptr(value.m_ptr) {}
 Value::Value() : m_ptr(std::make_shared<LuaNil>()) {}
 Value::Value(double value) : m_ptr(std::make_shared<LuaNumber>(value)) {}
 Value::Value(int value) : m_ptr(std::make_shared<LuaInteger>(value)) {}
+Value::Value(unsigned int value) : m_ptr(std::make_shared<LuaUInt>(value)) {}
+Value::Value(long value) : m_ptr(std::make_shared<LuaLong>(value)) {}
+Value::Value(unsigned long value) : m_ptr(std::make_shared<LuaULong>(value)) {}
 Value::Value(const char *value) : m_ptr(std::make_shared<LuaString>(value)) {}
 Value::Value(const std::string &value) : m_ptr(std::make_shared<LuaString>(value)) {}
 Value::Value(LuaCFunction value) : m_ptr(std::make_shared<LuaClosure>(value)) {}
@@ -76,6 +97,9 @@ Value::Type Value::type() const { return m_ptr->type(); }
 void *Value::nil_value() const { return nullptr; }
 double Value::number_value() const { return m_ptr->number_value(); }
 int Value::integer_value() const { return m_ptr->integer_value(); }
+unsigned int Value::uint_value() const { return m_ptr->uint_value(); }
+long Value::long_value() const { return m_ptr->long_value(); }
+unsigned long Value::ulong_value() const { return m_ptr->ulong_value(); }
 const std::string &Value::string_value() const { return m_ptr->string_value(); }
 LuaCFunction Value::cfunction_value() const { return m_ptr->cfunction_value(); }
 bool Value::boolean_value() const { return m_ptr->boolean_value(); }

@@ -76,6 +76,18 @@ Value toValue(lua_State *state, Value::Type type, uint32_t idx)
             luaL_checktype(state, idx, LUA_TNUMBER);
             return int (lua_tointeger(state, idx));
 
+        case Value::UInt:
+            luaL_checktype(state, idx, LUA_TNUMBER);
+            return static_cast<unsigned int>(lua_tonumber(state, idx));
+
+        case Value::Long:
+            luaL_checktype(state, idx, LUA_TNUMBER);
+            return static_cast<long>(lua_tonumber(state, idx));
+
+        case Value::ULong:
+            luaL_checktype(state, idx, LUA_TNUMBER);
+            return static_cast<unsigned long>(lua_tonumber(state, idx));
+
         case Value::String:
             luaL_checktype(state, idx, LUA_TSTRING);
             return lua_tostring(state, idx);
@@ -120,6 +132,18 @@ void pushValue(lua_State *state, const Value &value)
 
         case Value::Integer:
             lua_pushinteger(state, value.integer_value());
+        break;
+
+        case Value::UInt:
+            lua_pushnumber(state, value.uint_value());
+        break;
+
+        case Value::Long:
+            lua_pushnumber(state, value.long_value());
+        break;
+
+        case Value::ULong:
+            lua_pushnumber(state, value.ulong_value());
         break;
 
         case Value::String:
