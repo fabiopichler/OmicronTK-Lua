@@ -9,12 +9,12 @@ template<typename _Class, const char *_className>
 class ObjectUtil
 {
 public:
-    static inline void newUserData(lua_State *L, _Class *userdata)
+    static inline void newUserData(lua_State *L, int idx, _Class *userdata)
     {
         *static_cast<void **>(lua_newuserdata(L, sizeof(_Class *))) = userdata;
 
         luaL_setmetatable(L, _className);
-        lua_setfield(L, -2, "__userdata");
+        lua_setfield(L, idx, "__userdata");
     }
 
     static inline _Class *checkUserData(lua_State *L, int ud)
