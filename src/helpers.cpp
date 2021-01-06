@@ -63,7 +63,8 @@ ValueVector pcallReturn(lua_State *state, const std::vector<Value::Type> &return
 
 Value toValue(lua_State *state, Value::Type type, uint32_t idx)
 {
-    switch (type) {
+    switch (type)
+    {
         case Value::Nil:
             luaL_checktype(state, idx, LUA_TNIL);
         break;
@@ -82,7 +83,7 @@ Value toValue(lua_State *state, Value::Type type, uint32_t idx)
 
         case Value::Long:
             luaL_checktype(state, idx, LUA_TNUMBER);
-            return static_cast<long>(lua_tonumber(state, idx));
+            return long (lua_tonumber(state, idx));
 
         case Value::ULong:
             luaL_checktype(state, idx, LUA_TNUMBER);
@@ -116,12 +117,13 @@ Value toValue(lua_State *state, Value::Type type, uint32_t idx)
         }
     }
 
-    return Value();
+    return Value(); // nil
 }
 
 void pushValue(lua_State *state, const Value &value)
 {
-    switch (value.type()) {
+    switch (value.type())
+    {
         case Value::Nil:
             lua_pushnil(state);
         break;

@@ -59,7 +59,7 @@ bool Lua::executeFile(const std::string &fileName)
     if (luaL_dofile(m_state, fileName.c_str()) == LUA_OK)
         return true;
 
-    std::cerr << "[LuaState::loadFile] error: " << lua_tostring(m_state, -1) << std::endl;
+    std::cerr << "[LuaState::executeFile] error: " << lua_tostring(m_state, -1) << std::endl;
 
     lua_close(m_state);
     m_state = nullptr;
@@ -199,7 +199,7 @@ ValueVector Lua::callObjectMethod(const std::string &table, const std::string &f
     return pcallReturn(m_state, returns);
 }
 
-int Lua::addDirPath(const std::string &path)
+void Lua::addDirPath(const std::string &path)
 {
     lua_getglobal(m_state, "package");
     lua_getfield(m_state, -1, "path");
@@ -213,8 +213,6 @@ int Lua::addDirPath(const std::string &path)
     lua_setfield(m_state, -2, "path");
 
     lua_pop(m_state, 1);
-
-    return 0;
 }
 
 }

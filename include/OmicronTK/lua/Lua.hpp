@@ -78,7 +78,7 @@ public:
     ValueVector callObjectMethod(const std::string &table, const std::string &field,
                                     const ValueVector &values, const std::vector<Value::Type> &returns);
 
-    int addDirPath(const std::string &path);
+    void addDirPath(const std::string &path);
 
     template<typename LuaClass>
     inline void require()
