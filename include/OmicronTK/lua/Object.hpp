@@ -28,6 +28,7 @@ SOFTWARE.
 #include "OmicronTK/lua/util/ObjectUtil.hpp"
 #include "OmicronTK/lua/helpers.hpp"
 
+#include <memory>
 #include <cassert>
 
 namespace OmicronTK {
@@ -50,7 +51,7 @@ public:
         _Class *object = callConstructor(args, std::make_index_sequence<sizeof... (_types)>{});
 
         lua_pushvalue(L, 1);
-        ObjUtil::newUserData(L, object);
+        ObjUtil::newUserData(L, 1, object);
 
         return 0;
     }

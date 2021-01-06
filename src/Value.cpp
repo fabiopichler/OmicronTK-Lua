@@ -1,5 +1,4 @@
 #include "OmicronTK/lua/Value.hpp"
-#include "private/ValuePrivateBase.hpp"
 #include "OmicronTK/lua/defines.hpp"
 
 #include <string>
@@ -7,103 +6,151 @@
 namespace OmicronTK {
 namespace lua {
 
-class LuaNil : public ValuePrivate<Value::Nil, void *>
+Value::Value(const Value &value)
+    : m_type(value.m_type)
 {
-public:
-    LuaNil() : ValuePrivate(nullptr) {}
-};
+    switch (value.m_type)
+    {
+        case Value::Nil: break;
+        case Value::Number: this->m_number = value.m_number; break;
+        case Value::Integer: this->m_integer = value.m_integer; break;
+        case Value::UInt: this->m_uint = value.m_uint; break;
+        case Value::Long: this->m_long = value.m_long; break;
+        case Value::ULong: this->m_ulong = value.m_ulong; break;
+        case Value::String: new(&this->m_string) std::string(value.m_string); break;
+        case Value::CFunction: this->m_cfunction = value.m_cfunction; break;
+        case Value::Boolean: this->m_boolean = value.m_boolean; break;
+        case Value::UserData: this->m_userdata = value.m_userdata; break;
+    }
+}
 
-class LuaNumber : public ValuePrivate<Value::Number, double>
+Value::Value(Value &&value)
+    : m_type(value.m_type)
 {
-public:
-    LuaNumber(double value) : ValuePrivate(value) {}
-    double number_value() const override { return m_value; }
-};
+    switch (value.m_type)
+    {
+        case Value::Nil: break;
+        case Value::Number: this->m_number = value.m_number; break;
+        case Value::Integer: this->m_integer = value.m_integer; break;
+        case Value::UInt: this->m_uint = value.m_uint; break;
+        case Value::Long: this->m_long = value.m_long; break;
+        case Value::ULong: this->m_ulong = value.m_ulong; break;
+        case Value::String: new(&this->m_string) std::string(value.m_string); break;
+        case Value::CFunction: this->m_cfunction = value.m_cfunction; break;
+        case Value::Boolean: this->m_boolean = value.m_boolean; break;
+        case Value::UserData: this->m_userdata = value.m_userdata; break;
+    }
+}
 
-class LuaInteger : public ValuePrivate<Value::Integer, int>
+Value::Value()
+    : m_type(Value::Nil) {}
+
+Value::Value(double value)
+    : m_type(Value::Number)
+    , m_number(value) {}
+
+Value::Value(int value)
+    : m_type(Value::Integer)
+    , m_integer(value) {}
+
+Value::Value(unsigned int value)
+    : m_type(Value::UInt)
+    , m_uint(value) {}
+
+Value::Value(long value)
+    : m_type(Value::Long)
+    , m_long(value) {}
+
+Value::Value(unsigned long value)
+    : m_type(Value::ULong)
+    , m_ulong(value) {}
+
+Value::Value(const char *value)
+    : m_type(Value::String)
+    , m_string(value) {}
+
+Value::Value(const std::string &value)
+    : m_type(Value::String)
+    , m_string(value) {}
+
+Value::Value(LuaCFunction value)
+    : m_type(Value::CFunction)
+    , m_cfunction(value) {}
+
+Value::Value(LuaCppFunction value)
+    : m_type(Value::CFunction)
+    , m_cfunction(reinterpret_cast<LuaCFunction>(value)) {}
+
+Value::Value(bool value)
+    : m_type(Value::Boolean)
+    , m_boolean(value) {}
+
+Value::Value(void *value)
+    : m_type(Value::UserData)
+    , m_userdata(value) {}
+
+Value::~Value()
 {
-public:
-    LuaInteger(int value) : ValuePrivate(value) {}
-    int integer_value() const override { return m_value; }
-};
+    using string_type = std::string;
 
-class LuaUInt : public ValuePrivate<Value::UInt, unsigned int>
+    if (m_type == Value::String)
+        this->m_string.~string_type();
+}
+
+Value::Type Value::type() const
 {
-public:
-    LuaUInt(unsigned int value) : ValuePrivate(value) {}
-    unsigned int uint_value() const override { return m_value; }
-};
+    return m_type;
+}
 
-class LuaLong : public ValuePrivate<Value::Long, long>
+void *Value::nil_value() const
 {
-public:
-    LuaLong(long value) : ValuePrivate(value) {}
-    long long_value() const override { return m_value; }
-};
+    return nullptr;
+}
 
-class LuaULong : public ValuePrivate<Value::ULong, unsigned long>
+double Value::number_value() const
 {
-public:
-    LuaULong(unsigned long value) : ValuePrivate(value) {}
-    unsigned long ulong_value() const override { return m_value; }
-};
+    return m_type == Value::Number ? this->m_number : 0.0;
+}
 
-class LuaString : public ValuePrivate<Value::String, std::string>
+int Value::integer_value() const
 {
-public:
-    LuaString(const std::string &value) : ValuePrivate(value) {}
+    return m_type == Value::Integer ? this->m_integer : 0;
+}
 
-    const std::string &string_value() const override { return m_value; }
-};
-
-class LuaClosure : public ValuePrivate<Value::CFunction, LuaCFunction>
+unsigned int Value::uint_value() const
 {
-public:
-    LuaClosure(LuaCFunction value) : ValuePrivate(value) {}
-    LuaCFunction cfunction_value() const override { return m_value; }
-};
+    return m_type == Value::UInt ? this->m_uint : 0u;
+}
 
-class LuaBoolean : public ValuePrivate<Value::Boolean, bool>
+long Value::long_value() const
 {
-public:
-    LuaBoolean(bool value) : ValuePrivate(value) {}
-    bool boolean_value() const override { return m_value; }
-};
+    return m_type == Value::Long ? this->m_long : 0l;
+}
 
-class LuaUserData : public ValuePrivate<Value::UserData, void *>
+unsigned long Value::ulong_value() const
 {
-public:
-    LuaUserData(void *value) : ValuePrivate(value) {}
-    void *userdata_value() const override { return m_value; }
-};
+    return m_type == Value::ULong ? this->m_ulong : 0ul;
+}
 
-Value::Value(Value &&value) : m_ptr(value.m_ptr) {}
-Value::Value(const Value &value) : m_ptr(value.m_ptr) {}
-Value::Value() : m_ptr(std::make_shared<LuaNil>()) {}
-Value::Value(double value) : m_ptr(std::make_shared<LuaNumber>(value)) {}
-Value::Value(int value) : m_ptr(std::make_shared<LuaInteger>(value)) {}
-Value::Value(unsigned int value) : m_ptr(std::make_shared<LuaUInt>(value)) {}
-Value::Value(long value) : m_ptr(std::make_shared<LuaLong>(value)) {}
-Value::Value(unsigned long value) : m_ptr(std::make_shared<LuaULong>(value)) {}
-Value::Value(const char *value) : m_ptr(std::make_shared<LuaString>(value)) {}
-Value::Value(const std::string &value) : m_ptr(std::make_shared<LuaString>(value)) {}
-Value::Value(LuaCFunction value) : m_ptr(std::make_shared<LuaClosure>(value)) {}
-Value::Value(LuaCppFunction value) : m_ptr(std::make_shared<LuaClosure>(reinterpret_cast<LuaCFunction>(value))) {}
-Value::Value(bool value) : m_ptr(std::make_shared<LuaBoolean>(value)) {}
-Value::Value(void *value) : m_ptr(std::make_shared<LuaUserData>(value)) {}
+const std::string &Value::string_value() const
+{
+    return m_type == Value::String ? this->m_string : EmptyString;
+}
 
-Value::Type Value::type() const { return m_ptr->type(); }
+LuaCFunction Value::cfunction_value() const
+{
+    return m_type == Value::CFunction ? this->m_cfunction : nullptr;
+}
 
-void *Value::nil_value() const { return nullptr; }
-double Value::number_value() const { return m_ptr->number_value(); }
-int Value::integer_value() const { return m_ptr->integer_value(); }
-unsigned int Value::uint_value() const { return m_ptr->uint_value(); }
-long Value::long_value() const { return m_ptr->long_value(); }
-unsigned long Value::ulong_value() const { return m_ptr->ulong_value(); }
-const std::string &Value::string_value() const { return m_ptr->string_value(); }
-LuaCFunction Value::cfunction_value() const { return m_ptr->cfunction_value(); }
-bool Value::boolean_value() const { return m_ptr->boolean_value(); }
-void *Value::userdata_value() const { return m_ptr->userdata_value(); }
+bool Value::boolean_value() const
+{
+    return m_type == Value::Boolean ? this->m_boolean : false;
+}
+
+void *Value::userdata_value() const
+{
+    return m_type == Value::UserData ? this->m_userdata : nullptr;
+}
 
 }
 }

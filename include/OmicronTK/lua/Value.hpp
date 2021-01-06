@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <memory>
 
 #include "OmicronTK/lua/defines.hpp"
 #include "OmicronTK/lua/CallbackInfo.hpp"
@@ -9,7 +8,6 @@
 namespace OmicronTK {
 namespace lua {
 
-class ValuePrivateBase;
 class Value
 {
 public:
@@ -27,8 +25,8 @@ public:
         UserData
     };
 
-    Value(Value &&value);
     Value(const Value &value);
+    Value(Value &&value);
     Value(); // nil
     Value(double value);
     Value(int value);
@@ -41,6 +39,7 @@ public:
     Value(LuaCppFunction value);
     Value(bool value);
     Value(void *value);
+    ~Value();
 
     Value::Type type() const;
 
@@ -67,7 +66,20 @@ public:
     inline operator void *() const { return userdata_value(); }
 
 private:
-    std::shared_ptr<ValuePrivateBase> m_ptr;
+    const Value::Type m_type;
+
+    union
+    {
+        double m_number;
+        int m_integer;
+        unsigned int m_uint;
+        long m_long;
+        unsigned long m_ulong;
+        std::string m_string;
+        LuaCFunction m_cfunction;
+        bool m_boolean;
+        void *m_userdata;
+    };
 };
 
 using ValueVector = std::vector<Value>;

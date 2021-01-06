@@ -43,8 +43,6 @@ set(SRC_FILES
     include/OmicronTK/lua/Lua.hpp
     include/OmicronTK/lua/Value.hpp
     include/OmicronTK/lua/version.h
-    src/private/ValuePrivateBase.cpp
-    src/private/ValuePrivateBase.hpp
     src/helpers.cpp
     include/OmicronTK/lua/helpers.hpp
     src/Value.cpp
