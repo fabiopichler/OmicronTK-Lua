@@ -50,8 +50,15 @@ Lua::Lua()
 
 Lua::~Lua()
 {
+    close();
+}
+
+void Lua::close()
+{
     if (m_state)
         lua_close(m_state);
+
+    m_state = nullptr;
 }
 
 bool Lua::executeFile(const std::string &fileName)
@@ -205,7 +212,7 @@ void Lua::addDirPath(const std::string &path)
     lua_getfield(m_state, -1, "path");
 
     std::string cur_path = lua_tostring(m_state, -1);
-    cur_path.append(";").append(path).append("?.lua");
+    cur_path.append(";").append(path).append("/?.lua");
 
     lua_pop(m_state, 1);
 

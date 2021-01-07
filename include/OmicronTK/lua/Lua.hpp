@@ -48,6 +48,7 @@ public:
 
     inline lua_State *state() { return m_state; }
 
+    void close();
     bool executeFile(const std::string &fileName);
     bool execute(const std::string &script);
 
