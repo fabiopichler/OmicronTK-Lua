@@ -96,6 +96,26 @@ public:
         return 1;
     }
 
+    template<typename _Field, const _Field *_field, const Value::Type _type>
+    inline static int setter(lua_State *L)
+    {
+        _Class *object = ObjUtil::checkUserData(L, 1);
+
+        (object->*(*_field)) = toValue(L, _type, 2);
+
+        return 0;
+    }
+
+    template<typename _Field, const _Field *_field, const Value::Type _type>
+    inline static int getter(lua_State *L)
+    {
+        _Class *object = ObjUtil::checkUserData(L, 1);
+
+        pushValue(L, (object->*(*_field)));
+
+        return 1;
+    }
+
     inline static int __gc(lua_State *L)
     {
         _Class *object = *static_cast<_Class **>(luaL_checkudata(L, -1, _className));
