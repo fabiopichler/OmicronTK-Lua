@@ -56,6 +56,22 @@ public:
         return 0;
     }
 
+    template<const Value::Type... _types>
+    inline static int initializer(lua_State *L)
+    {
+        assert ((lua_gettop(L) - 1) == (sizeof... (_types)));
+
+        luaL_checktype(L, 1, LUA_TTABLE);
+
+        auto args = argsFunc<_types...>(L);
+        _Class *object = initialize(args, std::make_index_sequence<sizeof... (_types)>{});
+
+        lua_pushvalue(L, 1);
+        ObjUtil::newUserData(L, 1, object);
+
+        return 0;
+    }
+
     template<typename _Method, const _Method *_method, const Value::Type... _types>
     inline static int method(lua_State *L)
     {
@@ -133,6 +149,12 @@ private:
     inline static _Class *callConstructor(_ArgsFunc&& _args, std::index_sequence<I...>)
     {
         return new _Class(_args(I)...);
+    }
+
+    template<typename _ArgsFunc, std::size_t... I>
+    inline static _Class *initialize(_ArgsFunc&& _args, std::index_sequence<I...>)
+    {
+        return new _Class{_args(I)...};
     }
 
     template<typename _Method, typename _ArgsFunc, std::size_t... I>

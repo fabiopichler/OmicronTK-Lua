@@ -105,7 +105,7 @@ Value toValue(lua_State *state, Value::Type type, uint32_t idx)
         {
             if (lua_istable(state, idx))
             {
-                lua_getfield(state, 1, "__userdata");
+                lua_getfield(state, idx, "__userdata");
                 luaL_checktype(state, -1, LUA_TUSERDATA);
 
                 return *static_cast<void **>(lua_touserdata(state, -1));
