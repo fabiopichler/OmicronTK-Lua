@@ -73,6 +73,10 @@ Value toValue(lua_State *state, Value::Type type, uint32_t idx)
             luaL_checktype(state, idx, LUA_TNUMBER);
             return double (lua_tonumber(state, idx));
 
+        case Value::Float:
+            luaL_checktype(state, idx, LUA_TNUMBER);
+            return float (lua_tonumber(state, idx));
+
         case Value::Integer:
             luaL_checktype(state, idx, LUA_TNUMBER);
             return int (lua_tointeger(state, idx));
@@ -130,6 +134,10 @@ void pushValue(lua_State *state, const Value &value)
 
         case Value::Number:
             lua_pushnumber(state, value.number_value());
+        break;
+
+        case Value::Float:
+            lua_pushnumber(state, value.float_value());
         break;
 
         case Value::Integer:

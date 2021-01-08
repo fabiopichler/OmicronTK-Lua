@@ -13,6 +13,7 @@ Value::Value(const Value &value)
     {
         case Value::Nil: break;
         case Value::Number: this->m_number = value.m_number; break;
+        case Value::Float: this->m_float = value.m_float; break;
         case Value::Integer: this->m_integer = value.m_integer; break;
         case Value::UInt: this->m_uint = value.m_uint; break;
         case Value::Long: this->m_long = value.m_long; break;
@@ -31,6 +32,7 @@ Value::Value(Value &&value)
     {
         case Value::Nil: break;
         case Value::Number: this->m_number = value.m_number; break;
+        case Value::Float: this->m_float = value.m_float; break;
         case Value::Integer: this->m_integer = value.m_integer; break;
         case Value::UInt: this->m_uint = value.m_uint; break;
         case Value::Long: this->m_long = value.m_long; break;
@@ -48,6 +50,10 @@ Value::Value()
 Value::Value(double value)
     : m_type(Value::Number)
     , m_number(value) {}
+
+Value::Value(float value)
+    : m_type(Value::Float)
+    , m_float(value) {}
 
 Value::Value(int value)
     : m_type(Value::Integer)
@@ -102,14 +108,14 @@ Value::Type Value::type() const
     return m_type;
 }
 
-void *Value::nil_value() const
-{
-    return nullptr;
-}
-
 double Value::number_value() const
 {
     return m_type == Value::Number ? this->m_number : 0.0;
+}
+
+float Value::float_value() const
+{
+    return m_type == Value::Float ? this->m_float : 0.0f;
 }
 
 int Value::integer_value() const
