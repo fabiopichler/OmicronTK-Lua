@@ -157,7 +157,7 @@ void pushValue(lua_State *state, const Value &value)
         break;
 
         case Value::String:
-            lua_pushstring(state, value.string_value().c_str());
+            lua_pushstring(state, value.c_str_value());
         break;
 
         case Value::CFunction:

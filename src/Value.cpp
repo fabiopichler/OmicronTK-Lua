@@ -2,9 +2,20 @@
 #include "OmicronTK/lua/defines.hpp"
 
 #include <string>
+#include <cstring>
 
 namespace OmicronTK {
 namespace lua {
+
+static char *newString(const char *value)
+{
+    const size_t len = std::strlen(value) + 1;
+    char *str = new char[len];
+
+    std::memcpy(str, value, len);
+
+    return str;
+}
 
 Value::Value(const Value &value)
     : m_type(value.m_type)
@@ -18,7 +29,7 @@ Value::Value(const Value &value)
         case Value::UInt: this->m_uint = value.m_uint; break;
         case Value::Long: this->m_long = value.m_long; break;
         case Value::ULong: this->m_ulong = value.m_ulong; break;
-        case Value::String: new(&this->m_string) std::string(value.m_string); break;
+        case Value::String: this->m_string = newString(value.m_string); break;
         case Value::CFunction: this->m_cfunction = value.m_cfunction; break;
         case Value::Boolean: this->m_boolean = value.m_boolean; break;
         case Value::UserData: this->m_userdata = value.m_userdata; break;
@@ -37,7 +48,7 @@ Value::Value(Value &&value)
         case Value::UInt: this->m_uint = value.m_uint; break;
         case Value::Long: this->m_long = value.m_long; break;
         case Value::ULong: this->m_ulong = value.m_ulong; break;
-        case Value::String: new(&this->m_string) std::string(value.m_string); break;
+        case Value::String: this->m_string = newString(value.m_string); break;
         case Value::CFunction: this->m_cfunction = value.m_cfunction; break;
         case Value::Boolean: this->m_boolean = value.m_boolean; break;
         case Value::UserData: this->m_userdata = value.m_userdata; break;
@@ -73,11 +84,11 @@ Value::Value(unsigned long value)
 
 Value::Value(const char *value)
     : m_type(Value::String)
-    , m_string(value) {}
+    , m_string(newString(value)) {}
 
 Value::Value(const std::string &value)
     : m_type(Value::String)
-    , m_string(value) {}
+    , m_string(newString(value.c_str())) {}
 
 Value::Value(LuaCFunction value)
     : m_type(Value::CFunction)
@@ -97,10 +108,8 @@ Value::Value(void *value)
 
 Value::~Value()
 {
-    using string_type = std::string;
-
     if (m_type == Value::String)
-        this->m_string.~string_type();
+        delete this->m_string;
 }
 
 Value::Type Value::type() const
@@ -138,7 +147,12 @@ unsigned long Value::ulong_value() const
     return m_type == Value::ULong ? this->m_ulong : 0ul;
 }
 
-const std::string &Value::string_value() const
+const char *Value::c_str_value() const
+{
+    return m_type == Value::String ? this->m_string : EmptyString.c_str();
+}
+
+std::string Value::string_value() const
 {
     return m_type == Value::String ? this->m_string : EmptyString;
 }

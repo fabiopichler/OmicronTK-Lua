@@ -51,7 +51,8 @@ public:
     unsigned int uint_value() const;
     long long_value() const;
     unsigned long ulong_value() const;
-    const std::string &string_value() const;
+    const char *c_str_value() const;
+    std::string string_value() const;
     LuaCFunction cfunction_value() const;
     bool boolean_value() const;
     void *userdata_value() const;
@@ -62,8 +63,8 @@ public:
     inline operator unsigned int () const { return uint_value(); }
     inline operator long () const { return long_value(); }
     inline operator unsigned long () const { return ulong_value(); }
-    inline operator const char *() { return string_value().c_str(); }
-    inline operator const std::string &() const { return string_value(); }
+    inline operator const char *() { return c_str_value(); }
+    inline operator std::string () const { return c_str_value(); }
     inline operator LuaCFunction () const { return cfunction_value(); }
     inline operator bool () const { return boolean_value(); }
     inline operator void *() const { return userdata_value(); }
@@ -79,7 +80,7 @@ private:
         unsigned int m_uint;
         long m_long;
         unsigned long m_ulong;
-        std::string m_string;
+        char *m_string;
         LuaCFunction m_cfunction;
         bool m_boolean;
         void *m_userdata;
