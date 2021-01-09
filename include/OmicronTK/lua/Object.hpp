@@ -88,7 +88,7 @@ public:
 
         Value val = callMethod_r<_types...>(L, object, _method, std::make_index_sequence<sizeof... (_types)>{});
 
-        pushValue(L, val);
+        pushValue(L, static_cast<_ValueType<_returnType>>(val));
 
         return 1;
     }
@@ -98,7 +98,7 @@ public:
     {
         _Class *object = ObjUtil::checkUserData(L, 1);
 
-        (object->*(*_field)) = toValue(L, _type, 2);
+        (object->*(*_field)) = static_cast<_ValueType<_type>>(toValue(L, _type, 2));
 
         return 0;
     }
@@ -108,7 +108,7 @@ public:
     {
         _Class *object = ObjUtil::checkUserData(L, 1);
 
-        pushValue(L, (object->*(*_field)));
+        pushValue(L, static_cast<_ValueType<_type>>((object->*(*_field))));
 
         return 1;
     }
@@ -155,17 +155,17 @@ private:
     template<const ValueType... _types, std::size_t... I>
     inline static _Class *callConstructor(lua_State *L, std::index_sequence<I...>)
     {
-        const ValueType types[] { _types... };
+        constexpr ValueType types[] { _types... };
 
-        return new _Class(std::forward<Value>(toValue(L, types[I], I + 2))...);
+        return new _Class(static_cast<_ValueType<types[I]>>(toValue(L, types[I], I + 2))...);
     }
 
     template<const ValueType... _types, std::size_t... I>
     inline static _Class *initialize(lua_State *L, std::index_sequence<I...>)
     {
-        const ValueType types[] { _types... };
+        constexpr ValueType types[] { _types... };
 
-        return new _Class{std::forward<Value>(toValue(L, types[I], I + 2))...};
+        return new _Class{static_cast<_ValueType<types[I]>>(toValue(L, types[I], I + 2))...};
     }
 
     template<const ValueType... _types, typename _Method, std::size_t... I>
@@ -173,15 +173,16 @@ private:
     {
         constexpr ValueType types[] { _types... };
 
-        (_object->*(*_method))(std::forward<Value>(toValue(L, types[I], I + 2))...);
+        (_object->*(*_method))(static_cast<_ValueType<types[I]>>(toValue(L, types[I], I + 2))...);
     }
 
     template<const ValueType... _types, typename _Method, std::size_t... I>
     inline static auto callMethod_r(lua_State *L, _Class *_object, _Method&& _method, std::index_sequence<I...>)
     {
-        const ValueType types[] { _types... };
+        constexpr ValueType types[] { _types... };
 
-        return std::forward<Value>((_object->*(*_method))(std::forward<Value>(toValue(L, types[I], I + 2))...));
+        return std::forward<Value>((_object->*(*_method))(
+                                       static_cast<_ValueType<types[I]>>(toValue(L, types[I], I + 2))...));
     }
 };
 

@@ -30,7 +30,7 @@ public:
 
         Value val = callFunction_r<_types...>(L, _func, std::make_index_sequence<sizeof... (_types)>{});
 
-        pushValue(L, val);
+        pushValue(L, static_cast<_ValueType<_returnType>>(val));
 
         return 1;
     }
@@ -39,17 +39,17 @@ private:
     template<const ValueType... _types, typename _Func, std::size_t... I>
     inline static void callFunction(lua_State *L, _Func&& _func, std::index_sequence<I...>)
     {
-        const ValueType types[] { _types... };
+        constexpr ValueType types[] { _types... };
 
-        (*_func)(std::forward<Value>(toValue(L, types[I], I + 1))...);
+        (*_func)(static_cast<_ValueType<types[I]>>(toValue(L, types[I], I + 1))...);
     }
 
     template<const ValueType... _types, typename _Func, std::size_t... I>
     inline static Value callFunction_r(lua_State *L, _Func&& _func, std::index_sequence<I...>)
     {
-        const ValueType types[] { _types... };
+        constexpr ValueType types[] { _types... };
 
-        return std::forward<Value>((*_func)(std::forward<Value>(toValue(L, types[I], I + 1))...));
+        return std::forward<Value>((*_func)(static_cast<_ValueType<types[I]>>(toValue(L, types[I], I + 1))...));
     }
 };
 

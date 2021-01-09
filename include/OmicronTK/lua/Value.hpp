@@ -24,73 +24,76 @@ enum ValueType
 };
 
 template<ValueType>
-struct _ValueType
+struct __ValueType
 {
     using type = void;
 };
 
+template<const ValueType _type>
+using _ValueType = typename __ValueType<_type>::type;
+
 template<>
-struct _ValueType<Nil>
+struct __ValueType<Nil>
 {
     using type = void *;
 };
 
 template<>
-struct _ValueType<Number>
+struct __ValueType<Number>
 {
     using type = double;
 };
 
 template<>
-struct _ValueType<Float>
+struct __ValueType<Float>
 {
     using type = float;
 };
 
 template<>
-struct _ValueType<Integer>
+struct __ValueType<Integer>
 {
     using type = int;
 };
 
 template<>
-struct _ValueType<UInt>
+struct __ValueType<UInt>
 {
     using type = unsigned int;
 };
 
 template<>
-struct _ValueType<Long>
+struct __ValueType<Long>
 {
     using type = long;
 };
 
 template<>
-struct _ValueType<ULong>
+struct __ValueType<ULong>
 {
     using type = unsigned long;
 };
 
 template<>
-struct _ValueType<String>
+struct __ValueType<String>
 {
     using type = const char *;
 };
 
 template<>
-struct _ValueType<CFunction>
+struct __ValueType<CFunction>
 {
     using type = LuaCFunction;
 };
 
 template<>
-struct _ValueType<Boolean>
+struct __ValueType<Boolean>
 {
     using type = bool;
 };
 
 template<>
-struct _ValueType<UserData>
+struct __ValueType<UserData>
 {
     using type = void *;
 };

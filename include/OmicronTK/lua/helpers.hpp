@@ -17,7 +17,7 @@ Value toValue(lua_State *state, ValueType type, uint32_t idx);
 void pushValue(lua_State *state, const Value &value);
 
 template<const ValueType _type>
-typename _ValueType<_type>::type toValue(lua_State *state, uint32_t idx)
+_ValueType<_type> toValue(lua_State *state, uint32_t idx)
 {
     return toValue(state, _type, idx).value<_type>();
 }
