@@ -49,7 +49,7 @@ void pcallTable(lua_State *state, bool isObject, const std::string &table, const
     lua_pcall(state, valuesSize, returnsSize, 0);
 }
 
-ValueVector pcallReturn(lua_State *state, const std::vector<Value::Type> &returns)
+ValueVector pcallReturn(lua_State *state, const std::vector<ValueType> &returns)
 {
     ValueVector valueVector;
 
@@ -61,51 +61,51 @@ ValueVector pcallReturn(lua_State *state, const std::vector<Value::Type> &return
     return valueVector;
 }
 
-Value toValue(lua_State *state, Value::Type type, uint32_t idx)
+Value toValue(lua_State *state, ValueType type, uint32_t idx)
 {
     switch (type)
     {
-        case Value::Nil:
+        case ValueType::Nil:
             luaL_checktype(state, idx, LUA_TNIL);
         break;
 
-        case Value::Number:
+        case ValueType::Number:
             luaL_checktype(state, idx, LUA_TNUMBER);
             return double (lua_tonumber(state, idx));
 
-        case Value::Float:
+        case ValueType::Float:
             luaL_checktype(state, idx, LUA_TNUMBER);
             return float (lua_tonumber(state, idx));
 
-        case Value::Integer:
+        case ValueType::Integer:
             luaL_checktype(state, idx, LUA_TNUMBER);
             return int (lua_tointeger(state, idx));
 
-        case Value::UInt:
+        case ValueType::UInt:
             luaL_checktype(state, idx, LUA_TNUMBER);
             return static_cast<unsigned int>(lua_tonumber(state, idx));
 
-        case Value::Long:
+        case ValueType::Long:
             luaL_checktype(state, idx, LUA_TNUMBER);
             return long (lua_tonumber(state, idx));
 
-        case Value::ULong:
+        case ValueType::ULong:
             luaL_checktype(state, idx, LUA_TNUMBER);
             return static_cast<unsigned long>(lua_tonumber(state, idx));
 
-        case Value::String:
+        case ValueType::String:
             luaL_checktype(state, idx, LUA_TSTRING);
             return lua_tostring(state, idx);
 
-        case Value::CFunction:
+        case ValueType::CFunction:
             luaL_checktype(state, idx, LUA_TFUNCTION);
             return lua_tocfunction(state, idx);
 
-        case Value::Boolean:
+        case ValueType::Boolean:
             luaL_checktype(state, idx, LUA_TBOOLEAN);
             return bool (lua_toboolean(state, idx));
 
-        case Value::UserData:
+        case ValueType::UserData:
         {
             if (lua_istable(state, idx))
             {
@@ -128,47 +128,47 @@ void pushValue(lua_State *state, const Value &value)
 {
     switch (value.type())
     {
-        case Value::Nil:
+        case ValueType::Nil:
             lua_pushnil(state);
         break;
 
-        case Value::Number:
+        case ValueType::Number:
             lua_pushnumber(state, value.number_value());
         break;
 
-        case Value::Float:
+        case ValueType::Float:
             lua_pushnumber(state, value.float_value());
         break;
 
-        case Value::Integer:
+        case ValueType::Integer:
             lua_pushinteger(state, value.integer_value());
         break;
 
-        case Value::UInt:
+        case ValueType::UInt:
             lua_pushnumber(state, value.uint_value());
         break;
 
-        case Value::Long:
+        case ValueType::Long:
             lua_pushnumber(state, value.long_value());
         break;
 
-        case Value::ULong:
+        case ValueType::ULong:
             lua_pushnumber(state, value.ulong_value());
         break;
 
-        case Value::String:
+        case ValueType::String:
             lua_pushstring(state, value.c_str_value());
         break;
 
-        case Value::CFunction:
+        case ValueType::CFunction:
             lua_pushcfunction(state, value.cfunction_value());
         break;
 
-        case Value::Boolean:
+        case ValueType::Boolean:
             lua_pushboolean(state, value.boolean_value());
         break;
 
-        case Value::UserData:
+        case ValueType::UserData:
             lua_pushlightuserdata(state, value.userdata_value());
         break;
     }

@@ -41,7 +41,7 @@ class Object
     using ObjUtil = ObjectUtil<_Class, _className>;
 
 public:
-    template<const Value::Type... _types>
+    template<const ValueType... _types>
     inline static int constructor(lua_State *L)
     {
         assert ((lua_gettop(L) - 1) == (sizeof... (_types)));
@@ -56,7 +56,7 @@ public:
         return 0;
     }
 
-    template<const Value::Type... _types>
+    template<const ValueType... _types>
     inline static int initializer(lua_State *L)
     {
         assert ((lua_gettop(L) - 1) == (sizeof... (_types)));
@@ -71,7 +71,7 @@ public:
         return 0;
     }
 
-    template<typename _Method, const _Method *_method, const Value::Type... _types>
+    template<typename _Method, const _Method *_method, const ValueType... _types>
     inline static int method(lua_State *L)
     {
         _Class *object = getUserData<_types...>(L);
@@ -81,7 +81,7 @@ public:
         return 0;
     }
 
-    template<typename _Method, const _Method *_method, const Value::Type _returnType, const Value::Type... _types>
+    template<typename _Method, const _Method *_method, const ValueType _returnType, const ValueType... _types>
     inline static int method_r(lua_State *L)
     {
         _Class *object = getUserData<_types...>(L);
@@ -93,7 +93,7 @@ public:
         return 1;
     }
 
-    template<typename _Field, const _Field *_field, const Value::Type _type>
+    template<typename _Field, const _Field *_field, const ValueType _type>
     inline static int setter(lua_State *L)
     {
         _Class *object = ObjUtil::checkUserData(L, 1);
@@ -103,7 +103,7 @@ public:
         return 0;
     }
 
-    template<typename _Field, const _Field *_field, const Value::Type _type>
+    template<typename _Field, const _Field *_field, const ValueType _type>
     inline static int getter(lua_State *L)
     {
         _Class *object = ObjUtil::checkUserData(L, 1);
@@ -131,7 +131,7 @@ public:
     class util
     {
     public:
-        template<const Value::Type... _types>
+        template<const ValueType... _types>
         inline static LuaReg constructor()
         {
             return LuaReg { "constructor", Object::constructor<_types...> };
@@ -144,7 +144,7 @@ public:
     };
 
 private:
-    template<const Value::Type... _types>
+    template<const ValueType... _types>
     inline static _Class *getUserData(lua_State *L)
     {
         assert ((lua_gettop(L) - 1) == (sizeof... (_types)));
@@ -152,34 +152,34 @@ private:
         return ObjUtil::checkUserData(L, 1);
     }
 
-    template<const Value::Type... _types, std::size_t... I>
+    template<const ValueType... _types, std::size_t... I>
     inline static _Class *callConstructor(lua_State *L, std::index_sequence<I...>)
     {
-        const Value::Type types[] { _types... };
+        const ValueType types[] { _types... };
 
         return new _Class(std::forward<Value>(toValue(L, types[I], I + 2))...);
     }
 
-    template<const Value::Type... _types, std::size_t... I>
+    template<const ValueType... _types, std::size_t... I>
     inline static _Class *initialize(lua_State *L, std::index_sequence<I...>)
     {
-        const Value::Type types[] { _types... };
+        const ValueType types[] { _types... };
 
         return new _Class{std::forward<Value>(toValue(L, types[I], I + 2))...};
     }
 
-    template<const Value::Type... _types, typename _Method, std::size_t... I>
+    template<const ValueType... _types, typename _Method, std::size_t... I>
     inline static void callMethod(lua_State *L, _Class *_object, _Method&& _method, std::index_sequence<I...>)
     {
-        const Value::Type types[] { _types... };
+        constexpr ValueType types[] { _types... };
 
         (_object->*(*_method))(std::forward<Value>(toValue(L, types[I], I + 2))...);
     }
 
-    template<const Value::Type... _types, typename _Method, std::size_t... I>
+    template<const ValueType... _types, typename _Method, std::size_t... I>
     inline static auto callMethod_r(lua_State *L, _Class *_object, _Method&& _method, std::index_sequence<I...>)
     {
-        const Value::Type types[] { _types... };
+        const ValueType types[] { _types... };
 
         return std::forward<Value>((_object->*(*_method))(std::forward<Value>(toValue(L, types[I], I + 2))...));
     }

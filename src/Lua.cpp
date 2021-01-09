@@ -146,7 +146,7 @@ void Lua::addToPrototype(const std::string &table, const RegVector &values)
     lua_pop(m_state, 1);
 }
 
-Value Lua::getValue(const std::string &global, Value::Type type)
+Value Lua::getValue(const std::string &global, ValueType type)
 {
     lua_getglobal(m_state, global.c_str());
     Value value = toValue(m_state, type, 1);
@@ -156,7 +156,7 @@ Value Lua::getValue(const std::string &global, Value::Type type)
     return value;
 }
 
-Value Lua::getValue(const std::string &table, const std::string &field, Value::Type type)
+Value Lua::getValue(const std::string &table, const std::string &field, ValueType type)
 {
     lua_getglobal(m_state, table.c_str());
     lua_getfield(m_state, -1, field.c_str());
@@ -174,7 +174,7 @@ void Lua::callFunction(const std::string &name, const ValueVector &values, size_
 }
 
 ValueVector Lua::callFunction(const std::string &name, const ValueVector &values,
-                                 const std::vector<Value::Type> &returns)
+                                 const std::vector<ValueType> &returns)
 {
     pcall(m_state, name, values, returns.size());
     return pcallReturn(m_state, returns);
@@ -187,7 +187,7 @@ void Lua::callTableFunction(const std::string &table, const std::string &field,
 }
 
 ValueVector Lua::callTableFunction(const std::string &table, const std::string &field,
-                                 const ValueVector &values, const std::vector<Value::Type> &returns)
+                                 const ValueVector &values, const std::vector<ValueType> &returns)
 {
     pcallTable(m_state, false, table, field, values, returns.size());
     return pcallReturn(m_state, returns);
@@ -200,7 +200,7 @@ void Lua::callObjectMethod(const std::string &table, const std::string &field,
 }
 
 ValueVector Lua::callObjectMethod(const std::string &table, const std::string &field,
-                                const ValueVector &values, const std::vector<Value::Type> &returns)
+                                const ValueVector &values, const std::vector<ValueType> &returns)
 {
     pcallTable(m_state, false, table, field, values, returns.size());
     return pcallReturn(m_state, returns);

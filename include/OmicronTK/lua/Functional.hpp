@@ -13,7 +13,7 @@ namespace lua {
 class Functional
 {
 public:
-    template<typename _Func, const _Func *_func, const Value::Type... _types>
+    template<typename _Func, const _Func *_func, const ValueType... _types>
     inline static int function(lua_State *L)
     {
         assert (lua_gettop(L) == (sizeof... (_types)));
@@ -23,7 +23,7 @@ public:
         return 0;
     }
 
-    template<typename _Func, const _Func *_func, const Value::Type _returnType, const Value::Type... _types>
+    template<typename _Func, const _Func *_func, const ValueType _returnType, const ValueType... _types>
     inline static int function_r(lua_State *L)
     {
         assert (lua_gettop(L) == (sizeof... (_types)));
@@ -36,18 +36,18 @@ public:
     }
 
 private:
-    template<const Value::Type... _types, typename _Func, std::size_t... I>
+    template<const ValueType... _types, typename _Func, std::size_t... I>
     inline static void callFunction(lua_State *L, _Func&& _func, std::index_sequence<I...>)
     {
-        const Value::Type types[] { _types... };
+        const ValueType types[] { _types... };
 
         (*_func)(std::forward<Value>(toValue(L, types[I], I + 1))...);
     }
 
-    template<const Value::Type... _types, typename _Func, std::size_t... I>
+    template<const ValueType... _types, typename _Func, std::size_t... I>
     inline static Value callFunction_r(lua_State *L, _Func&& _func, std::index_sequence<I...>)
     {
-        const Value::Type types[] { _types... };
+        const ValueType types[] { _types... };
 
         return std::forward<Value>((*_func)(std::forward<Value>(toValue(L, types[I], I + 1))...));
     }

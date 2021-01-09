@@ -8,24 +8,99 @@
 namespace OmicronTK {
 namespace lua {
 
+enum ValueType
+{
+    Nil,
+    Number,
+    Float,
+    Integer,
+    UInt,
+    Long,
+    ULong,
+    String,
+    CFunction,
+    Boolean,
+    UserData
+};
+
+template<ValueType>
+struct _ValueType
+{
+    using type = void;
+};
+
+template<>
+struct _ValueType<Nil>
+{
+    using type = void *;
+};
+
+template<>
+struct _ValueType<Number>
+{
+    using type = double;
+};
+
+template<>
+struct _ValueType<Float>
+{
+    using type = float;
+};
+
+template<>
+struct _ValueType<Integer>
+{
+    using type = int;
+};
+
+template<>
+struct _ValueType<UInt>
+{
+    using type = unsigned int;
+};
+
+template<>
+struct _ValueType<Long>
+{
+    using type = long;
+};
+
+template<>
+struct _ValueType<ULong>
+{
+    using type = unsigned long;
+};
+
+template<>
+struct _ValueType<String>
+{
+    using type = const char *;
+};
+
+template<>
+struct _ValueType<CFunction>
+{
+    using type = LuaCFunction;
+};
+
+template<>
+struct _ValueType<Boolean>
+{
+    using type = bool;
+};
+
+template<>
+struct _ValueType<UserData>
+{
+    using type = void *;
+};
+
 class Value
 {
-public:
-    enum Type
-    {
-        Nil,
-        Number,
-        Float,
-        Integer,
-        UInt,
-        Long,
-        ULong,
-        String,
-        CFunction,
-        Boolean,
-        UserData
-    };
+    template<const ValueType type, const ValueType expected, typename _Tp>
+    using _enable_if = typename std::enable_if<type == expected, _Tp>::type;
 
+public:
     Value(const Value &value);
     Value(Value &&value);
     Value(); // nil
@@ -43,7 +118,7 @@ public:
     Value(void *value);
     ~Value();
 
-    Value::Type type() const;
+    ValueType type() const;
 
     double number_value() const;
     float float_value() const;
@@ -69,8 +144,63 @@ public:
     inline operator bool () const { return boolean_value(); }
     inline operator void *() const { return userdata_value(); }
 
+    template<const ValueType type>
+    _enable_if<type, ValueType::Nil, void *> value() {
+        return nullptr;
+    }
+
+    template<const ValueType type>
+    _enable_if<type, ValueType::Number, double> value() {
+        return number_value();
+    }
+
+    template<const ValueType type>
+    _enable_if<type, ValueType::Float, float> value() {
+        return float_value();
+    }
+
+    template<const ValueType type>
+    _enable_if<type, ValueType::Integer, int> value() {
+        return integer_value();
+    }
+
+    template<const ValueType type>
+    _enable_if<type, ValueType::UInt, unsigned int> value() {
+        return uint_value();
+    }
+
+    template<const ValueType type>
+    _enable_if<type, ValueType::Long, long> value() {
+        return long_value();
+    }
+
+    template<const ValueType type>
+    _enable_if<type, ValueType::ULong, unsigned long> value() {
+        return ulong_value();
+    }
+
+    template<const ValueType type>
+    _enable_if<type, ValueType::String, const char *> value() {
+        return c_str_value();
+    }
+
+    template<const ValueType type>
+    _enable_if<type, ValueType::CFunction, LuaCFunction> value() {
+        return cfunction_value();
+    }
+
+    template<const ValueType type>
+    _enable_if<type, ValueType::Boolean, bool> value() {
+        return boolean_value();
+    }
+
+    template<const ValueType type>
+    _enable_if<type, ValueType::UserData, void *> value() {
+        return userdata_value();
+    }
+
 private:
-    const Value::Type m_type;
+    const ValueType m_type;
 
     union
     {

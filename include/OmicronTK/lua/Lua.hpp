@@ -62,22 +62,22 @@ public:
     void addToPrototype(const std::string &table, const std::string &field, const Value &value);
     void addToPrototype(const std::string &table, const RegVector &values);
 
-    Value getValue(const std::string &global, Value::Type type);
-    Value getValue(const std::string &table, const std::string &field, Value::Type type);
+    Value getValue(const std::string &global, ValueType type);
+    Value getValue(const std::string &table, const std::string &field, ValueType type);
 
     void callFunction(const std::string &name, const ValueVector &values = {}, size_t returns = 0);
     ValueVector callFunction(const std::string &name, const ValueVector &values,
-                                const std::vector<Value::Type> &returns);
+                                const std::vector<ValueType> &returns);
 
     void callTableFunction(const std::string &table, const std::string &field,
                            const ValueVector &values = {}, size_t returns = 0);
     ValueVector callTableFunction(const std::string &table, const std::string &field,
-                                     const ValueVector &values, const std::vector<Value::Type> &returns);
+                                     const ValueVector &values, const std::vector<ValueType> &returns);
 
     void callObjectMethod(const std::string &table, const std::string &field,
                           const ValueVector &values = {}, size_t returns = 0);
     ValueVector callObjectMethod(const std::string &table, const std::string &field,
-                                    const ValueVector &values, const std::vector<Value::Type> &returns);
+                                    const ValueVector &values, const std::vector<ValueType> &returns);
 
     void addDirPath(const std::string &path);
 
