@@ -4,6 +4,7 @@
 #include "OmicronTK/lua/helpers.hpp"
 
 #include <lua.hpp>
+#include <utility>
 #include <cassert>
 
 namespace OmicronTK {
@@ -17,8 +18,7 @@ public:
     {
         assert (lua_gettop(L) == (sizeof... (_types)));
 
-        auto args = argsFunc<_types...>(L);
-        callFunction(_func, args, std::make_index_sequence<sizeof... (_types)>{});
+        callFunction<_types...>(L, _func, std::make_index_sequence<sizeof... (_types)>{});
 
         return 0;
     }
@@ -28,8 +28,7 @@ public:
     {
         assert (lua_gettop(L) == (sizeof... (_types)));
 
-        auto args = argsFunc<_types...>(L);
-        Value val = callFunction_r(_func, args, std::make_index_sequence<sizeof... (_types)>{});
+        Value val = callFunction_r<_types...>(L, _func, std::make_index_sequence<sizeof... (_types)>{});
 
         pushValue(L, val);
 
@@ -37,26 +36,20 @@ public:
     }
 
 private:
-    template<const Value::Type... _types>
-    inline static auto argsFunc(lua_State *L)
+    template<const Value::Type... _types, typename _Func, std::size_t... I>
+    inline static void callFunction(lua_State *L, _Func&& _func, std::index_sequence<I...>)
     {
         const Value::Type types[] { _types... };
 
-        return [types, L] (int i) {
-            return std::forward<Value>(toValue(L, types[i], i + 1));
-        };
+        (*_func)(std::forward<Value>(toValue(L, types[I], I + 1))...);
     }
 
-    template<typename _Func, typename _ArgsFunc, std::size_t... I>
-    inline static void callFunction(_Func&& _func, _ArgsFunc&& _args, std::index_sequence<I...>)
+    template<const Value::Type... _types, typename _Func, std::size_t... I>
+    inline static Value callFunction_r(lua_State *L, _Func&& _func, std::index_sequence<I...>)
     {
-        (*_func)(_args(I)...);
-    }
+        const Value::Type types[] { _types... };
 
-    template<typename _Func, typename _ArgsFunc, std::size_t... I>
-    inline static Value callFunction_r(_Func&& _func, _ArgsFunc&& _args, std::index_sequence<I...>)
-    {
-        return std::forward<Value>((*_func)(_args(I)...));
+        return std::forward<Value>((*_func)(std::forward<Value>(toValue(L, types[I], I + 1))...));
     }
 };
 

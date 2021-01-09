@@ -29,6 +29,7 @@ SOFTWARE.
 #include "OmicronTK/lua/helpers.hpp"
 
 #include <memory>
+#include <utility>
 #include <cassert>
 
 namespace OmicronTK {
@@ -47,8 +48,7 @@ public:
 
         luaL_checktype(L, 1, LUA_TTABLE);
 
-        auto args = argsFunc<_types...>(L);
-        _Class *object = callConstructor(args, std::make_index_sequence<sizeof... (_types)>{});
+        _Class *object = callConstructor<_types...>(L, std::make_index_sequence<sizeof... (_types)>{});
 
         lua_pushvalue(L, 1);
         ObjUtil::newUserData(L, 1, object);
@@ -63,8 +63,7 @@ public:
 
         luaL_checktype(L, 1, LUA_TTABLE);
 
-        auto args = argsFunc<_types...>(L);
-        _Class *object = initialize(args, std::make_index_sequence<sizeof... (_types)>{});
+        _Class *object = initialize<_types...>(L, std::make_index_sequence<sizeof... (_types)>{});
 
         lua_pushvalue(L, 1);
         ObjUtil::newUserData(L, 1, object);
@@ -76,9 +75,8 @@ public:
     inline static int method(lua_State *L)
     {
         _Class *object = getUserData<_types...>(L);
-        auto args = argsFunc<_types...>(L);
 
-        callMethod(object, _method, args, std::make_index_sequence<sizeof... (_types)>{});
+        callMethod<_types...>(L, object, _method, std::make_index_sequence<sizeof... (_types)>{});
 
         return 0;
     }
@@ -87,9 +85,8 @@ public:
     inline static int method_r(lua_State *L)
     {
         _Class *object = getUserData<_types...>(L);
-        auto args = argsFunc<_types...>(L);
 
-        Value val = callMethod_r(object, _method, args, std::make_index_sequence<sizeof... (_types)>{});
+        Value val = callMethod_r<_types...>(L, object, _method, std::make_index_sequence<sizeof... (_types)>{});
 
         pushValue(L, val);
 
@@ -155,38 +152,36 @@ private:
         return ObjUtil::checkUserData(L, 1);
     }
 
-    template<const Value::Type... _types>
-    inline static auto argsFunc(lua_State *L)
+    template<const Value::Type... _types, std::size_t... I>
+    inline static _Class *callConstructor(lua_State *L, std::index_sequence<I...>)
     {
         const Value::Type types[] { _types... };
 
-        return [types, L] (int i) {
-            return std::forward<Value>(toValue(L, types[i], i + 2));
-        };
+        return new _Class(std::forward<Value>(toValue(L, types[I], I + 2))...);
     }
 
-    template<typename _ArgsFunc, std::size_t... I>
-    inline static _Class *callConstructor(_ArgsFunc&& _args, std::index_sequence<I...>)
+    template<const Value::Type... _types, std::size_t... I>
+    inline static _Class *initialize(lua_State *L, std::index_sequence<I...>)
     {
-        return new _Class(_args(I)...);
+        const Value::Type types[] { _types... };
+
+        return new _Class{std::forward<Value>(toValue(L, types[I], I + 2))...};
     }
 
-    template<typename _ArgsFunc, std::size_t... I>
-    inline static _Class *initialize(_ArgsFunc&& _args, std::index_sequence<I...>)
+    template<const Value::Type... _types, typename _Method, std::size_t... I>
+    inline static void callMethod(lua_State *L, _Class *_object, _Method&& _method, std::index_sequence<I...>)
     {
-        return new _Class{_args(I)...};
+        const Value::Type types[] { _types... };
+
+        (_object->*(*_method))(std::forward<Value>(toValue(L, types[I], I + 2))...);
     }
 
-    template<typename _Method, typename _ArgsFunc, std::size_t... I>
-    inline static void callMethod(_Class *_object, _Method&& _method, _ArgsFunc&& _args, std::index_sequence<I...>)
+    template<const Value::Type... _types, typename _Method, std::size_t... I>
+    inline static auto callMethod_r(lua_State *L, _Class *_object, _Method&& _method, std::index_sequence<I...>)
     {
-        (_object->*(*_method))(_args(I)...);
-    }
+        const Value::Type types[] { _types... };
 
-    template<typename _Method, typename _ArgsFunc, std::size_t... I>
-    inline static auto callMethod_r(_Class *_object, _Method&& _method, _ArgsFunc&& _args, std::index_sequence<I...>)
-    {
-        return std::forward<Value>((_object->*(*_method))(_args(I)...));
+        return std::forward<Value>((_object->*(*_method))(std::forward<Value>(toValue(L, types[I], I + 2))...));
     }
 };
 
