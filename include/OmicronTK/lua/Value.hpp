@@ -104,6 +104,8 @@ class Value
     using _enable_if = typename std::enable_if<type == expected, _Tp>::type;
 
 public:
+    Value &operator=(const Value &value);
+
     Value(const Value &value);
     Value(Value &&value);
     Value(); // nil
@@ -203,7 +205,9 @@ public:
     }
 
 private:
-    const ValueType m_type;
+    void _switch(const Value &value);
+
+    ValueType m_type;
 
     union
     {
@@ -224,7 +228,7 @@ using ValueVector = std::vector<Value>;
 
 struct LuaReg
 {
-    const char *name;
+    std::string name;
     Value value;
 };
 

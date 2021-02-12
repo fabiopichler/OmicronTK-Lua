@@ -17,8 +17,7 @@ static char *newString(const char *value)
     return str;
 }
 
-Value::Value(const Value &value)
-    : m_type(value.m_type)
+void Value::_switch(const Value &value)
 {
     switch (value.m_type)
     {
@@ -36,23 +35,28 @@ Value::Value(const Value &value)
     }
 }
 
+Value &Value::operator=(const Value &value)
+{
+    if (&value != this)
+    {
+        m_type = value.m_type;
+
+        _switch(value);
+    }
+
+    return *this;
+}
+
+Value::Value(const Value &value)
+    : m_type(value.m_type)
+{
+    _switch(value);
+}
+
 Value::Value(Value &&value)
     : m_type(value.m_type)
 {
-    switch (value.m_type)
-    {
-        case ValueType::Nil: break;
-        case ValueType::Number: this->m_number = value.m_number; break;
-        case ValueType::Float: this->m_float = value.m_float; break;
-        case ValueType::Integer: this->m_integer = value.m_integer; break;
-        case ValueType::UInt: this->m_uint = value.m_uint; break;
-        case ValueType::Long: this->m_long = value.m_long; break;
-        case ValueType::ULong: this->m_ulong = value.m_ulong; break;
-        case ValueType::String: this->m_string = newString(value.m_string); break;
-        case ValueType::CFunction: this->m_cfunction = value.m_cfunction; break;
-        case ValueType::Boolean: this->m_boolean = value.m_boolean; break;
-        case ValueType::UserData: this->m_userdata = value.m_userdata; break;
-    }
+    _switch(value);
 }
 
 Value::Value()

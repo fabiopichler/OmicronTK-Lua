@@ -11,7 +11,7 @@ void LuaRegVector_forEach(lua_State *L, const RegVector &values)
     for (const LuaReg &value : values)
     {
         pushValue(L, value.value);
-        lua_setfield(L, -2, value.name);
+        lua_setfield(L, -2, value.name.c_str());
     }
 }
 
