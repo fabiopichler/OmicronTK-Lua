@@ -143,7 +143,7 @@ void Lua::addToPrototype(const std::string &table, const RegVector &values)
 
     LuaRegVector_forEach(m_state, values);
 
-    lua_pop(m_state, 1);
+    lua_pop(m_state, 2);
 }
 
 Value Lua::getValue(const std::string &global, ValueType type)
@@ -163,7 +163,7 @@ Value Lua::getValue(const std::string &table, const std::string &field, ValueTyp
 
     Value value = toValue(m_state, type, 1);
 
-    lua_pop(m_state, 1);
+    lua_pop(m_state, 2);
 
     return value;
 }
