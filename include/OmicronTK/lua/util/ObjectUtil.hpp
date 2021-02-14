@@ -26,5 +26,14 @@ public:
     }
 };
 
+template<typename _Class>
+inline _Class *toUserData(lua_State *L, int ud)
+{
+    luaL_checktype(L, ud, LUA_TTABLE);
+    lua_getfield(L, ud, "__userdata");
+
+    return *static_cast<_Class **>(lua_touserdata(L, -1));
+}
+
 }
 }
