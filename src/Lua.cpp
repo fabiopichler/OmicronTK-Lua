@@ -149,7 +149,7 @@ void Lua::addToPrototype(const std::string &table, const RegVector &values)
 Value Lua::getValue(const std::string &global, ValueType type)
 {
     lua_getglobal(m_state, global.c_str());
-    Value value = toValue(m_state, type, 1);
+    Value value = toValue(m_state, type, -1);
 
     lua_pop(m_state, 1);
 
@@ -161,7 +161,7 @@ Value Lua::getValue(const std::string &table, const std::string &field, ValueTyp
     lua_getglobal(m_state, table.c_str());
     lua_getfield(m_state, -1, field.c_str());
 
-    Value value = toValue(m_state, type, 1);
+    Value value = toValue(m_state, type, -1);
 
     lua_pop(m_state, 2);
 
