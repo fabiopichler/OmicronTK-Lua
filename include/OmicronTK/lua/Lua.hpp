@@ -81,6 +81,18 @@ public:
 
     void addDirPath(const std::string &path);
 
+    template<typename T = void>
+    inline T *getUserData(const std::string &global)
+    {
+        return static_cast<T *>(getValue(global, lua::UserData).userdata_value());
+    }
+
+    template<typename T = void>
+    inline T *getUserData(const std::string &table, const std::string &field)
+    {
+        return static_cast<T *>(getValue(table, field, lua::UserData).userdata_value());
+    }
+
     template<typename LuaClass>
     inline void require()
     {
