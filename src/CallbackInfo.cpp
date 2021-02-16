@@ -52,10 +52,14 @@ unsigned long CallbackInfo::getULong(int idx)
     return static_cast<unsigned long>(lua_tonumber(m_state, idx));
 }
 
+const char *CallbackInfo::getCString(int idx)
+{
+    return luaL_checklstring(m_state, idx, nullptr);
+}
+
 std::string CallbackInfo::getString(int idx)
 {
-    luaL_checktype(m_state, idx, LUA_TSTRING);
-    return lua_tostring(m_state, idx);
+    return luaL_checklstring(m_state, idx, nullptr);
 }
 
 lua_CFunction CallbackInfo::getCFunction(int idx)
