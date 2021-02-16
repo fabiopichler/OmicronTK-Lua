@@ -3,6 +3,8 @@
 #include "OmicronTK/lua/Value.hpp"
 #include <OmicronTK/lua/CallbackInfo.hpp>
 
+#include <stdexcept>
+
 namespace OmicronTK {
 namespace lua {
 
@@ -50,7 +52,14 @@ private:
     {
         CallbackInfo info(L);
 
-        func(info);
+        try
+        {
+            func(info);
+        }
+        catch (const std::exception &e)
+        {
+            return info.error(e.what());
+        }
 
         return info.getReturnValue().length();
     }

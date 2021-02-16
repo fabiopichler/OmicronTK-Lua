@@ -3,6 +3,8 @@
 
 #include <lua.hpp>
 
+#include <stdexcept>
+
 namespace OmicronTK {
 namespace lua {
 
@@ -27,6 +29,34 @@ CallbackInfo::CallbackInfo(lua_State *L)
 
 CallbackInfo::~CallbackInfo()
 {
+}
+
+void CallbackInfo::required(int value)
+{
+    if (m_length != value)
+    {
+        std::string message;
+        message.append("expecting exactly ")
+                .append(std::to_string(value))
+                .append(" arguments");
+
+        throw std::logic_error(message);
+    }
+}
+
+void CallbackInfo::required(int min, int max)
+{
+    if (m_length < min || m_length > max)
+    {
+        std::string message;
+        message.append("expecting between ")
+                .append(std::to_string(min))
+                .append(" and ")
+                .append(std::to_string(max))
+                .append(" arguments");
+
+        throw std::logic_error(message);
+    }
 }
 
 double CallbackInfo::getNumber(int idx, bool required, double defaultValue) const

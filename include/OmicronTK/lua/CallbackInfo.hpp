@@ -35,6 +35,9 @@ public:
 
     inline int length() const { return m_length; }
 
+    void required(int value);
+    void required(int min, int max);
+
     double getNumber(int idx, bool required = false, double defaultValue = 0.0) const;
     float getFloat(int idx, bool required = false, float defaultValue = 0.0f) const;
     int getInteger(int idx, bool required = false, int defaultValue = 0) const;
