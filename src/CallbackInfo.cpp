@@ -1,13 +1,27 @@
 #include "OmicronTK/lua/CallbackInfo.hpp"
+#include <OmicronTK/lua/helpers.hpp>
 
 #include <lua.hpp>
 
 namespace OmicronTK {
 namespace lua {
 
+CallbackInfo::ReturnValue::ReturnValue(lua_State *L)
+    : m_state(L)
+    , m_length(0)
+{
+}
+
+void CallbackInfo::ReturnValue::add(const Value &value)
+{
+    pushValue(m_state, value);
+    ++m_length;
+}
+
 CallbackInfo::CallbackInfo(lua_State *L)
     : m_state(L)
     , m_length(lua_gettop(L))
+    , m_returnValue(L)
 {
 }
 

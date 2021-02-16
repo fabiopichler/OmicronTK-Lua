@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "OmicronTK/lua/defines.hpp"
-#include "OmicronTK/lua/CallbackInfo.hpp"
 
 namespace OmicronTK {
 namespace lua {

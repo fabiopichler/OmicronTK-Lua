@@ -2,6 +2,7 @@
 
 #include "OmicronTK/lua/defines.hpp"
 #include <OmicronTK/lua/util/ObjectUtil.hpp>
+#include <OmicronTK/lua/Value.hpp>
 
 #include <lua.hpp>
 
@@ -11,6 +12,22 @@ namespace lua {
 class CallbackInfo
 {
 public:
+    class ReturnValue
+    {
+        ReturnValue(lua_State *L);
+
+    public:
+        inline int length() const { return m_length; }
+
+        void add(const Value &value);
+
+    private:
+        lua_State *m_state;
+        int m_length;
+
+        friend class CallbackInfo;
+    };
+
     explicit CallbackInfo(lua_State *L);
     ~CallbackInfo();
 
@@ -30,6 +47,8 @@ public:
     bool getBoolean(int idx, bool required = false, bool defaultValue = false) const;
     void *getUserData(int idx, bool required = false, void *defaultValue = nullptr) const;
     void *getLightUserData(int idx, bool required = false, void *defaultValue = nullptr) const;
+
+    inline ReturnValue &getReturnValue() { return m_returnValue; }
 
     template<typename T>
     inline T *getUserData(int idx) const
@@ -70,9 +89,10 @@ public:
 private:
     lua_State *m_state;
     const int m_length;
+    ReturnValue m_returnValue;
 };
 
-using LuaCppFunction = int (const CallbackInfo &info);
+using LuaCppFunction = int (CallbackInfo &info);
 
 }
 }
