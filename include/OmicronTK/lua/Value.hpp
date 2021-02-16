@@ -118,7 +118,6 @@ public:
     Value(const char *value);
     Value(const std::string &value);
     Value(LuaCFunction value);
-    Value(LuaCppFunction value);
     Value(bool value);
     Value(void *value);
     ~Value();

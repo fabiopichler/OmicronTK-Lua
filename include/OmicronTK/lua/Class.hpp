@@ -25,7 +25,33 @@ public:
     void addConstructor(const Value &constructor);
     void addDestructor(const Value &__gc);
 
+    template<int (*value)(const CallbackInfo &info)>
+    inline void addConstructor()
+    {
+        addConstructor(&luaCallback<value>);
+    }
+
+    template<int (*value)(const CallbackInfo &info)>
+    inline void addStatic(const std::string &field)
+    {
+        addStatic(field, &luaCallback<value>);
+    }
+
+    template<int (*value)(const CallbackInfo &info)>
+    inline void addMember(const std::string &field)
+    {
+        addMember(field, &luaCallback<value>);
+    }
+
 private:
+    template<int (*func)(const CallbackInfo &info)>
+    inline static int luaCallback(lua_State *L)
+    {
+        CallbackInfo info(L);
+
+        return func(info);
+    }
+
     std::string m_name;
     RegVector m_statics;
     RegVector m_members;

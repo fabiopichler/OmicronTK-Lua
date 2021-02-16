@@ -98,10 +98,6 @@ Value::Value(LuaCFunction value)
     : m_type(ValueType::CFunction)
     , m_cfunction(value) {}
 
-Value::Value(LuaCppFunction value)
-    : m_type(ValueType::CFunction)
-    , m_cfunction(reinterpret_cast<LuaCFunction>(value)) {}
-
 Value::Value(bool value)
     : m_type(ValueType::Boolean)
     , m_boolean(value) {}

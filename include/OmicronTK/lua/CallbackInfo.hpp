@@ -11,39 +11,40 @@ namespace lua {
 class CallbackInfo
 {
 public:
-    CallbackInfo(lua_State *L);
+    explicit CallbackInfo(lua_State *L);
+    ~CallbackInfo();
 
-    inline lua_State *state() { return m_state; }
+    inline lua_State *state() const { return m_state; }
 
-    int length();
+    inline int length() const { return m_length; }
 
-    double getNumber(int idx);
-    float getFloat(int idx);
-    int getInteger(int idx);
-    unsigned int getUInt(int idx);
-    long getLong(int idx);
-    unsigned long getULong(int idx);
-    const char *getCString(int idx);
-    std::string getString(int idx);
-    lua_CFunction getCFunction(int idx);
-    bool getBoolean(int idx);
-    void *getUserData(int idx);
-    void *getLightUserData(int idx);
+    double getNumber(int idx, bool required = false, double defaultValue = 0.0) const;
+    float getFloat(int idx, bool required = false, float defaultValue = 0.0f) const;
+    int getInteger(int idx, bool required = false, int defaultValue = 0) const;
+    unsigned int getUInt(int idx, bool required = false, unsigned int defaultValue = 0u) const;
+    long getLong(int idx, bool required = false, long defaultValue = 0L) const;
+    unsigned long getULong(int idx, bool required = false, unsigned long defaultValue = 0UL) const;
+    const char *getCString(int idx, bool required = false, const char *defaultValue = "") const;
+    std::string getString(int idx, bool required = false, std::string defaultValue = std::string()) const;
+    lua_CFunction getCFunction(int idx, bool required = false, lua_CFunction defaultValue = nullptr) const;
+    bool getBoolean(int idx, bool required = false, bool defaultValue = false) const;
+    void *getUserData(int idx, bool required = false, void *defaultValue = nullptr) const;
+    void *getLightUserData(int idx, bool required = false, void *defaultValue = nullptr) const;
 
     template<typename T>
-    inline T *getUserData(int idx)
+    inline T *getUserData(int idx) const
     {
         return static_cast<T *>(getUserData(idx));
     }
 
     template<typename T>
-    inline T *getLightUserData(int idx)
+    inline T *getLightUserData(int idx) const
     {
         return static_cast<T *>(getLightUserData(idx));
     }
 
     template<typename T = void>
-    inline void newUserData(int idx, const char *className, T *userdata)
+    inline void newUserData(int idx, const char *className, T *userdata) const
     {
         *static_cast<void **>(lua_newuserdata(m_state, sizeof(T *))) = userdata;
 
@@ -52,7 +53,7 @@ public:
     }
 
     template<typename T = void>
-    inline T *checkUserData(int idx, const char *className)
+    inline T *checkUserData(int idx, const char *className) const
     {
         luaL_checktype(m_state, idx, LUA_TTABLE);
         lua_getfield(m_state, idx, "__userdata");
@@ -61,16 +62,17 @@ public:
     }
 
     template<typename... Args>
-    inline int error(const char *fmt, Args... args)
+    inline int error(const char *fmt, Args... args) const
     {
         return luaL_error(m_state, fmt, args...);
     }
 
 private:
     lua_State *m_state;
+    const int m_length;
 };
 
-using LuaCppFunction = int (*)(CallbackInfo info);
+using LuaCppFunction = int (const CallbackInfo &info);
 
 }
 }
