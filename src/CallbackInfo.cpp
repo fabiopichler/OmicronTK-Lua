@@ -31,7 +31,7 @@ CallbackInfo::~CallbackInfo()
 {
 }
 
-void CallbackInfo::required(int value)
+void CallbackInfo::required(int value) const
 {
     if (m_length != value)
     {
@@ -44,7 +44,7 @@ void CallbackInfo::required(int value)
     }
 }
 
-void CallbackInfo::required(int min, int max)
+void CallbackInfo::required(int min, int max) const
 {
     if (m_length < min || m_length > max)
     {
@@ -59,76 +59,132 @@ void CallbackInfo::required(int min, int max)
     }
 }
 
-double CallbackInfo::getNumber(int idx, bool required, double defaultValue) const
+double CallbackInfo::getNumber(int idx, double defaultValue) const
 {
-    luaL_checktype(m_state, idx, LUA_TNUMBER);
-    return double (lua_tonumber(m_state, idx));
+    if (m_length >= idx)
+    {
+        luaL_checktype(m_state, idx, LUA_TNUMBER);
+        return double (lua_tonumber(m_state, idx));
+    }
+
+    return defaultValue;
 }
 
-float CallbackInfo::getFloat(int idx, bool required, float defaultValue) const
+float CallbackInfo::getFloat(int idx, float defaultValue) const
 {
-    luaL_checktype(m_state, idx, LUA_TNUMBER);
-    return float (lua_tonumber(m_state, idx));
+    if (m_length >= idx)
+    {
+        luaL_checktype(m_state, idx, LUA_TNUMBER);
+        return float (lua_tonumber(m_state, idx));
+    }
+
+    return defaultValue;
 }
 
-int CallbackInfo::getInteger(int idx, bool required, int defaultValue) const
+int CallbackInfo::getInteger(int idx, int defaultValue) const
 {
-    luaL_checktype(m_state, idx, LUA_TNUMBER);
-    return int (lua_tointeger(m_state, idx));
+    if (m_length >= idx)
+    {
+        luaL_checktype(m_state, idx, LUA_TNUMBER);
+        return int (lua_tointeger(m_state, idx));
+    }
+
+    return defaultValue;
 }
 
-unsigned int CallbackInfo::getUInt(int idx, bool required, unsigned int defaultValue) const
+unsigned int CallbackInfo::getUInt(int idx, unsigned int defaultValue) const
 {
-    luaL_checktype(m_state, idx, LUA_TNUMBER);
-    return static_cast<unsigned int>(lua_tonumber(m_state, idx));
+    if (m_length >= idx)
+    {
+        luaL_checktype(m_state, idx, LUA_TNUMBER);
+        return static_cast<unsigned int>(lua_tonumber(m_state, idx));
+    }
+
+    return defaultValue;
 }
 
-long CallbackInfo::getLong(int idx, bool required, long defaultValue) const
+long CallbackInfo::getLong(int idx, long defaultValue) const
 {
-    luaL_checktype(m_state, idx, LUA_TNUMBER);
-    return long (lua_tonumber(m_state, idx));
+    if (m_length >= idx)
+    {
+        luaL_checktype(m_state, idx, LUA_TNUMBER);
+        return long (lua_tonumber(m_state, idx));
+    }
+
+    return defaultValue;
 }
 
-unsigned long CallbackInfo::getULong(int idx, bool required, unsigned long defaultValue) const
+unsigned long CallbackInfo::getULong(int idx, unsigned long defaultValue) const
 {
-    luaL_checktype(m_state, idx, LUA_TNUMBER);
-    return static_cast<unsigned long>(lua_tonumber(m_state, idx));
+    if (m_length >= idx)
+    {
+        luaL_checktype(m_state, idx, LUA_TNUMBER);
+        return static_cast<unsigned long>(lua_tonumber(m_state, idx));
+    }
+
+    return defaultValue;
 }
 
-const char *CallbackInfo::getCString(int idx, bool required, const char *defaultValue) const
+const char *CallbackInfo::getCString(int idx, const char *defaultValue) const
 {
-    return luaL_checklstring(m_state, idx, nullptr);
+    if (m_length >= idx)
+        return luaL_checklstring(m_state, idx, nullptr);
+
+    return defaultValue;
 }
 
-std::string CallbackInfo::getString(int idx, bool required, std::string defaultValue) const
+std::string CallbackInfo::getString(int idx, const std::string &defaultValue) const
 {
-    return luaL_checklstring(m_state, idx, nullptr);
+    if (m_length >= idx)
+        return luaL_checklstring(m_state, idx, nullptr);
+
+    return defaultValue;
 }
 
-lua_CFunction CallbackInfo::getCFunction(int idx, bool required, lua_CFunction defaultValue) const
+lua_CFunction CallbackInfo::getCFunction(int idx, lua_CFunction defaultValue) const
 {
-    luaL_checktype(m_state, idx, LUA_TFUNCTION);
-    return lua_tocfunction(m_state, idx);
+    if (m_length >= idx)
+    {
+        luaL_checktype(m_state, idx, LUA_TFUNCTION);
+        return lua_tocfunction(m_state, idx);
+    }
+
+    return defaultValue;
 }
 
-bool CallbackInfo::getBoolean(int idx, bool required, bool defaultValue) const
+bool CallbackInfo::getBoolean(int idx, bool defaultValue) const
 {
-    luaL_checktype(m_state, idx, LUA_TBOOLEAN);
-    return bool (lua_toboolean(m_state, idx));
+    if (m_length >= idx)
+    {
+        luaL_checktype(m_state, idx, LUA_TBOOLEAN);
+        return bool (lua_toboolean(m_state, idx));
+    }
+
+    return defaultValue;
 }
 
-void *CallbackInfo::getUserData(int idx, bool required, void *defaultValue) const
+void *CallbackInfo::getUserData(int idx, void *defaultValue) const
 {
-    lua_getfield(m_state, idx, "__userdata");
-    luaL_checktype(m_state, -1, LUA_TUSERDATA);
+    if (m_length >= idx)
+    {
+        lua_getfield(m_state, idx, "__userdata");
+        luaL_checktype(m_state, -1, LUA_TUSERDATA);
 
-    return *static_cast<void **>(lua_touserdata(m_state, -1));
+        return *static_cast<void **>(lua_touserdata(m_state, -1));
+    }
+
+    return defaultValue;
 }
 
-void *CallbackInfo::getLightUserData(int idx, bool required, void *defaultValue) const
+void *CallbackInfo::getLightUserData(int idx, void *defaultValue) const
 {
-    luaL_checktype(m_state, idx, LUA_TLIGHTUSERDATA);
-    return lua_touserdata(m_state, idx);
+    if (m_length >= idx)
+    {
+        luaL_checktype(m_state, idx, LUA_TLIGHTUSERDATA);
+        return lua_touserdata(m_state, idx);
+    }
+
+    return defaultValue;
 }
 
 }

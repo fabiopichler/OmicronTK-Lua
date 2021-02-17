@@ -35,21 +35,21 @@ public:
 
     inline int length() const { return m_length; }
 
-    void required(int value);
-    void required(int min, int max);
+    void required(int value) const;
+    void required(int min, int max) const;
 
-    double getNumber(int idx, bool required = false, double defaultValue = 0.0) const;
-    float getFloat(int idx, bool required = false, float defaultValue = 0.0f) const;
-    int getInteger(int idx, bool required = false, int defaultValue = 0) const;
-    unsigned int getUInt(int idx, bool required = false, unsigned int defaultValue = 0u) const;
-    long getLong(int idx, bool required = false, long defaultValue = 0L) const;
-    unsigned long getULong(int idx, bool required = false, unsigned long defaultValue = 0UL) const;
-    const char *getCString(int idx, bool required = false, const char *defaultValue = "") const;
-    std::string getString(int idx, bool required = false, std::string defaultValue = std::string()) const;
-    lua_CFunction getCFunction(int idx, bool required = false, lua_CFunction defaultValue = nullptr) const;
-    bool getBoolean(int idx, bool required = false, bool defaultValue = false) const;
-    void *getUserData(int idx, bool required = false, void *defaultValue = nullptr) const;
-    void *getLightUserData(int idx, bool required = false, void *defaultValue = nullptr) const;
+    double getNumber(int idx, double defaultValue = 0.0) const;
+    float getFloat(int idx, float defaultValue = 0.0f) const;
+    int getInteger(int idx, int defaultValue = 0) const;
+    unsigned int getUInt(int idx, unsigned int defaultValue = 0u) const;
+    long getLong(int idx, long defaultValue = 0L) const;
+    unsigned long getULong(int idx, unsigned long defaultValue = 0UL) const;
+    const char *getCString(int idx, const char *defaultValue = "") const;
+    std::string getString(int idx, const std::string &defaultValue = std::string()) const;
+    lua_CFunction getCFunction(int idx, lua_CFunction defaultValue = nullptr) const;
+    bool getBoolean(int idx, bool defaultValue = false) const;
+    void *getUserData(int idx, void *defaultValue = nullptr) const;
+    void *getLightUserData(int idx, void *defaultValue = nullptr) const;
 
     inline ReturnValue &getReturnValue() { return m_returnValue; }
 
