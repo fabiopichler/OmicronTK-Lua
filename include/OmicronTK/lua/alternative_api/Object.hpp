@@ -25,7 +25,7 @@ SOFTWARE.
 #pragma once
 
 #include "OmicronTK/lua/Value.hpp"
-#include "OmicronTK/lua/util/ObjectUtil.hpp"
+#include "OmicronTK/lua/alternative_api/util/ObjectUtil.hpp"
 #include "OmicronTK/lua/helpers.hpp"
 
 #include <memory>

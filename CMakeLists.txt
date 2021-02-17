@@ -39,7 +39,6 @@ add_definitions(-DOTKLUA_BUILD_CORE_LIB)
 set(SRC_FILES
     include/OmicronTK/lua/global.h
     include/OmicronTK/lua/defines.hpp
-    include/OmicronTK/lua/util/ObjectUtil.hpp
     include/OmicronTK/lua/Lua.hpp
     include/OmicronTK/lua/Value.hpp
     include/OmicronTK/lua/version.h
@@ -50,10 +49,13 @@ set(SRC_FILES
     src/CallbackInfo.cpp
     include/OmicronTK/lua/CallbackInfo.hpp
     src/Class.cpp
-    include/OmicronTK/lua/Object.hpp
     include/OmicronTK/lua/Class.hpp
-    include/OmicronTK/lua/Functional.hpp
-    include/OmicronTK/lua/Callback.hpp)
+    include/OmicronTK/lua/Callback.hpp
+    src/StackValue.cpp
+    include/OmicronTK/lua/StackValue.hpp
+    include/OmicronTK/lua/alternative_api/util/ObjectUtil.hpp
+    include/OmicronTK/lua/alternative_api/Object.hpp
+    include/OmicronTK/lua/alternative_api/Functional.hpp)
 
 if(WIN32)
     set(SRC_FILES ${SRC_FILES} rc/lua.rc)

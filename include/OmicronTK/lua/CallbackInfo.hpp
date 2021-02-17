@@ -1,7 +1,6 @@
 #pragma once
 
 #include "OmicronTK/lua/defines.hpp"
-#include <OmicronTK/lua/util/ObjectUtil.hpp>
 #include <OmicronTK/lua/Value.hpp>
 
 namespace OmicronTK {
@@ -46,7 +45,7 @@ public:
     unsigned long getULong(int idx, unsigned long defaultValue = 0UL) const;
     const char *getCString(int idx, const char *defaultValue = "") const;
     std::string getString(int idx, const std::string &defaultValue = std::string()) const;
-    lua_CFunction getCFunction(int idx, lua_CFunction defaultValue = nullptr) const;
+    LuaCFunction getCFunction(int idx, LuaCFunction defaultValue = nullptr) const;
     bool getBoolean(int idx, bool defaultValue = false) const;
     void *getLightUserData(int idx, void *defaultValue = nullptr) const;
     void *getUserData(int idx, void *defaultValue = nullptr) const;

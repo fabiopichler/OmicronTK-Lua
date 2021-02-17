@@ -146,7 +146,7 @@ std::string CallbackInfo::getString(int idx, const std::string &defaultValue) co
     return defaultValue;
 }
 
-lua_CFunction CallbackInfo::getCFunction(int idx, lua_CFunction defaultValue) const
+LuaCFunction CallbackInfo::getCFunction(int idx, LuaCFunction defaultValue) const
 {
     if (m_length >= idx)
     {
