@@ -59,6 +59,11 @@ void CallbackInfo::required(int min, int max) const
     }
 }
 
+int CallbackInfo::error(const char *message) const
+{
+    return luaL_error(m_state, message);
+}
+
 double CallbackInfo::getNumber(int idx, double defaultValue) const
 {
     if (m_length >= idx)
@@ -163,6 +168,17 @@ bool CallbackInfo::getBoolean(int idx, bool defaultValue) const
     return defaultValue;
 }
 
+void *CallbackInfo::getLightUserData(int idx, void *defaultValue) const
+{
+    if (m_length >= idx)
+    {
+        luaL_checktype(m_state, idx, LUA_TLIGHTUSERDATA);
+        return lua_touserdata(m_state, idx);
+    }
+
+    return defaultValue;
+}
+
 void *CallbackInfo::getUserData(int idx, void *defaultValue) const
 {
     if (m_length >= idx)
@@ -176,15 +192,20 @@ void *CallbackInfo::getUserData(int idx, void *defaultValue) const
     return defaultValue;
 }
 
-void *CallbackInfo::getLightUserData(int idx, void *defaultValue) const
+void *CallbackInfo::checkUserData(int idx, const char *className) const
 {
-    if (m_length >= idx)
-    {
-        luaL_checktype(m_state, idx, LUA_TLIGHTUSERDATA);
-        return lua_touserdata(m_state, idx);
-    }
+    luaL_checktype(m_state, idx, LUA_TTABLE);
+    lua_getfield(m_state, idx, "__userdata");
 
-    return defaultValue;
+    return *static_cast<void **>(luaL_checkudata(m_state, -1, className));
+}
+
+void CallbackInfo::newUserData(int idx, const char *className, void *userdata) const
+{
+    *static_cast<void **>(lua_newuserdata(m_state, sizeof(void *))) = userdata;
+
+    luaL_setmetatable(m_state, className);
+    lua_setfield(m_state, idx, "__userdata");
 }
 
 }

@@ -52,7 +52,8 @@ set(SRC_FILES
     src/Class.cpp
     include/OmicronTK/lua/Object.hpp
     include/OmicronTK/lua/Class.hpp
-    include/OmicronTK/lua/Functional.hpp)
+    include/OmicronTK/lua/Functional.hpp
+    include/OmicronTK/lua/Callback.hpp)
 
 if(WIN32)
     set(SRC_FILES ${SRC_FILES} rc/lua.rc)

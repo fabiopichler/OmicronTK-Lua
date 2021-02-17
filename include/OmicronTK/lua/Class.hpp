@@ -1,7 +1,7 @@
 #pragma once
 
 #include "OmicronTK/lua/Value.hpp"
-#include <OmicronTK/lua/CallbackInfo.hpp>
+#include <OmicronTK/lua/Callback.hpp>
 
 #include <stdexcept>
 
@@ -31,39 +31,22 @@ public:
     template<void (*value)(CallbackInfo &info)>
     inline void addConstructor()
     {
-        addConstructor(&luaCallback<value>);
+        addConstructor(&Callback::luaCallback<value>);
     }
 
     template<void (*value)(CallbackInfo &info)>
     inline void addStatic(const std::string &field)
     {
-        addStatic(field, &luaCallback<value>);
+        addStatic(field, &Callback::luaCallback<value>);
     }
 
     template<void (*value)(CallbackInfo &info)>
     inline void addMember(const std::string &field)
     {
-        addMember(field, &luaCallback<value>);
+        addMember(field, &Callback::luaCallback<value>);
     }
 
 private:
-    template<void (*func)(CallbackInfo &info)>
-    inline static int luaCallback(lua_State *L)
-    {
-        CallbackInfo info(L);
-
-        try
-        {
-            func(info);
-        }
-        catch (const std::exception &e)
-        {
-            return info.error(e.what());
-        }
-
-        return info.getReturnValue().length();
-    }
-
     std::string m_name;
     RegVector m_statics;
     RegVector m_members;

@@ -4,8 +4,6 @@
 #include <OmicronTK/lua/util/ObjectUtil.hpp>
 #include <OmicronTK/lua/Value.hpp>
 
-#include <lua.hpp>
-
 namespace OmicronTK {
 namespace lua {
 
@@ -31,12 +29,14 @@ public:
     explicit CallbackInfo(lua_State *L);
     ~CallbackInfo();
 
-    inline lua_State *state() const { return m_state; }
-
     inline int length() const { return m_length; }
+    inline lua_State *state() const { return m_state; }
+    inline ReturnValue &getReturnValue() { return m_returnValue; }
 
     void required(int value) const;
     void required(int min, int max) const;
+
+    int error(const char *message) const;
 
     double getNumber(int idx, double defaultValue = 0.0) const;
     float getFloat(int idx, float defaultValue = 0.0f) const;
@@ -48,10 +48,17 @@ public:
     std::string getString(int idx, const std::string &defaultValue = std::string()) const;
     lua_CFunction getCFunction(int idx, lua_CFunction defaultValue = nullptr) const;
     bool getBoolean(int idx, bool defaultValue = false) const;
-    void *getUserData(int idx, void *defaultValue = nullptr) const;
     void *getLightUserData(int idx, void *defaultValue = nullptr) const;
+    void *getUserData(int idx, void *defaultValue = nullptr) const;
 
-    inline ReturnValue &getReturnValue() { return m_returnValue; }
+    void *checkUserData(int idx, const char *className) const;
+    void newUserData(int idx, const char *className, void *userdata) const;
+
+    template<typename T>
+    inline T *getLightUserData(int idx) const
+    {
+        return static_cast<T *>(getLightUserData(idx));
+    }
 
     template<typename T>
     inline T *getUserData(int idx) const
@@ -60,33 +67,9 @@ public:
     }
 
     template<typename T>
-    inline T *getLightUserData(int idx) const
-    {
-        return static_cast<T *>(getLightUserData(idx));
-    }
-
-    template<typename T = void>
-    inline void newUserData(int idx, const char *className, T *userdata) const
-    {
-        *static_cast<void **>(lua_newuserdata(m_state, sizeof(T *))) = userdata;
-
-        luaL_setmetatable(m_state, className);
-        lua_setfield(m_state, idx, "__userdata");
-    }
-
-    template<typename T = void>
     inline T *checkUserData(int idx, const char *className) const
     {
-        luaL_checktype(m_state, idx, LUA_TTABLE);
-        lua_getfield(m_state, idx, "__userdata");
-
-        return *static_cast<T **>(luaL_checkudata(m_state, -1, className));
-    }
-
-    template<typename... Args>
-    inline int error(const char *fmt, Args... args) const
-    {
-        return luaL_error(m_state, fmt, args...);
+        return static_cast<T *>(checkUserData(idx, className));
     }
 
 private:
