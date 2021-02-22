@@ -2,5 +2,7 @@
 *.txt.user*
 .directory
 /cmake-build*
-/build
+/build*
 .env.cmake
+/lib/*
+!/lib/.gitignore
