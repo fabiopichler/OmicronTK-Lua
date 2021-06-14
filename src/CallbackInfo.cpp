@@ -200,11 +200,17 @@ void *CallbackInfo::checkUserData(int idx, const char *className) const
     return *static_cast<void **>(luaL_checkudata(m_state, -1, className));
 }
 
+LUALIB_API void luaL_setmetatable_2(lua_State *L, const char *tname)
+{
+  lua_getfield(L, LUA_REGISTRYINDEX, tname);
+  lua_setmetatable(L, -2);
+}
+
 void CallbackInfo::newUserData(int idx, const char *className, void *userdata) const
 {
     *static_cast<void **>(lua_newuserdata(m_state, sizeof(void *))) = userdata;
 
-    luaL_setmetatable(m_state, className);
+    luaL_setmetatable_2(m_state, className);
     lua_setfield(m_state, idx, "__userdata");
 }
 
