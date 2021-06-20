@@ -48,8 +48,8 @@ set(SRC_FILES
     src/Lua.cpp
     src/CallbackInfo.cpp
     include/OmicronTK/lua/CallbackInfo.hpp
-    src/Class.cpp
-    include/OmicronTK/lua/Class.hpp
+    src/NativeClass.cpp
+    include/OmicronTK/lua/NativeClass.hpp
     include/OmicronTK/lua/Callback.hpp
     src/StackValue.cpp
     include/OmicronTK/lua/StackValue.hpp

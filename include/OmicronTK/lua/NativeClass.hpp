@@ -8,10 +8,11 @@
 namespace OmicronTK {
 namespace lua {
 
-class Class
+class Lua;
+class NativeClass
 {
 public:
-    explicit Class(const std::string &name);
+    explicit NativeClass(Lua &lua, const std::string &name);
 
     void setStatics(const RegVector &statics);
     void addStatic(const std::string &field, const Value &value);
@@ -27,6 +28,8 @@ public:
 
     void addConstructor(const Value &constructor);
     void addDestructor(const Value &__gc);
+
+    void create();
 
     template<void (*value)(CallbackInfo &info)>
     inline void addConstructor()
@@ -53,12 +56,11 @@ public:
     }
 
 private:
+    Lua &m_lua;
     std::string m_name;
     RegVector m_statics;
     RegVector m_members;
     RegVector m_metamethods;
-
-    friend class Lua;
 };
 
 }
