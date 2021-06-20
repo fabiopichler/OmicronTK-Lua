@@ -35,6 +35,12 @@ public:
     }
 
     template<void (*value)(CallbackInfo &info)>
+    inline void addDestructor()
+    {
+        addDestructor(&Callback::luaCallback<value>);
+    }
+
+    template<void (*value)(CallbackInfo &info)>
     inline void addStatic(const std::string &field)
     {
         addStatic(field, &Callback::luaCallback<value>);
