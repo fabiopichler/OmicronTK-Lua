@@ -55,7 +55,13 @@ set(SRC_FILES
     include/OmicronTK/lua/StackValue.hpp
     include/OmicronTK/lua/alternative_api/util/ObjectUtil.hpp
     include/OmicronTK/lua/alternative_api/Object.hpp
-    include/OmicronTK/lua/alternative_api/Functional.hpp)
+    include/OmicronTK/lua/alternative_api/Functional.hpp
+    include/OmicronTK/lua/Class.hpp
+    src/Class.cpp
+    include/OmicronTK/lua/Object.hpp
+    src/Object.cpp
+    include/OmicronTK/lua/Function.hpp
+    src/Function.cpp)
 
 if(WIN32)
     set(SRC_FILES ${SRC_FILES} rc/lua.rc)

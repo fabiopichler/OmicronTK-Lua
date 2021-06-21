@@ -39,6 +39,7 @@
 namespace OmicronTK {
 namespace lua {
 
+class Class;
 class OTKLUA_EXPORT Lua
 {
 public:
@@ -59,6 +60,8 @@ public:
 
     void addToPrototype(const std::string &table, const std::string &field, const Value &value);
     void addToPrototype(const std::string &table, const RegVector &values);
+
+    Class *getClass(const std::string &className);
 
     Value getValue(const std::string &global, ValueType type);
     Value getValue(const std::string &table, const std::string &field, ValueType type);

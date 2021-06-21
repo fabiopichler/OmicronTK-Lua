@@ -29,6 +29,7 @@
 
 #include "OmicronTK/lua/Lua.hpp"
 #include "OmicronTK/lua/helpers.hpp"
+#include "OmicronTK/lua/Class.hpp"
 
 #include <lua.hpp>
 #include <iostream>
@@ -121,6 +122,16 @@ void Lua::addToPrototype(const std::string &table, const RegVector &values)
     LuaRegVector_forEach(m_state, values);
 
     lua_pop(m_state, 2);
+}
+
+Class *Lua::getClass(const std::string &className)
+{
+    lua_getglobal(m_state, className.c_str());
+    int ref = luaL_ref(m_state, LUA_REGISTRYINDEX);
+
+    lua_pop(m_state, 1);
+
+    return new Class(this, ref);
 }
 
 Value Lua::getValue(const std::string &global, ValueType type)
