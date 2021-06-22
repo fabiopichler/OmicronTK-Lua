@@ -26,6 +26,9 @@ Object *Class::callConstructor(const ValueVector &values)
     lua_rawgeti(m_lua->state(), LUA_REGISTRYINDEX, m_ref);
     lua_getfield(m_lua->state(), -1, "new");
 
+    if (!lua_isfunction(m_lua->state(), -1))
+        return nullptr;
+
     for (const auto &value : values)
         pushValue(m_lua->state(), value);
 

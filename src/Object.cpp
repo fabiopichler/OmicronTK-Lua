@@ -23,6 +23,9 @@ Function *Object::getFunction(const std::string &name)
     lua_rawgeti(m_lua->state(), LUA_REGISTRYINDEX, m_ref);
     lua_getfield(m_lua->state(), -1, name.c_str());
 
+    if (!lua_isfunction(m_lua->state(), -1))
+        return nullptr;
+
     int ref = luaL_ref(m_lua->state(), LUA_REGISTRYINDEX);
 
     lua_pop(m_lua->state(), 1);

@@ -127,6 +127,10 @@ void Lua::addToPrototype(const std::string &table, const RegVector &values)
 Class *Lua::getClass(const std::string &className)
 {
     lua_getglobal(m_state, className.c_str());
+
+    if (!lua_istable(m_state, -1))
+        return nullptr;
+
     int ref = luaL_ref(m_state, LUA_REGISTRYINDEX);
 
     lua_pop(m_state, 1);
