@@ -78,9 +78,7 @@ function Object.create(name, super, proto)
     setmetatable(newClass.proto, { __index = super.proto })
 
     function newClass.new(...)
-        local self = {
-            super = super.proto.constructor,
-        }
+        local self = {}
 
         setmetatable(self, newClass.__mt_prototype)
 
