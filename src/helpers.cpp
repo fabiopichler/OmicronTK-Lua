@@ -6,12 +6,12 @@
 namespace OmicronTK {
 namespace lua {
 
-void LuaRegVector_forEach(lua_State *L, const RegVector &values)
+void LuaRegVector_forEach(lua_State *L, const RegMap &values)
 {
-    for (const LuaReg &value : values)
+    for (const auto &value : values)
     {
-        pushValue(L, value.value);
-        lua_setfield(L, -2, value.name.c_str());
+        pushValue(L, value.second);
+        lua_setfield(L, -2, value.first.c_str());
     }
 }
 

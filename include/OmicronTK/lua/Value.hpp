@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <map>
 
 #include "OmicronTK/lua/defines.hpp"
 
@@ -224,13 +224,7 @@ private:
 
 using ValueVector = std::vector<Value>;
 
-struct LuaReg
-{
-    std::string name;
-    Value value;
-};
-
-using RegVector = std::vector<LuaReg>;
+using RegMap = std::map<std::string, Value>;
 
 }
 }

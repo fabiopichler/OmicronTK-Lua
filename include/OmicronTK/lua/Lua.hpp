@@ -52,14 +52,14 @@ public:
     bool executeFile(const std::string &fileName);
     bool execute(const std::string &script);
 
-    void createTable(const std::string &name, const RegVector &values = {});
+    void createTable(const std::string &name, const RegMap &values = {});
 
     void setValue(const std::string &global, const Value &value);
     void setValue(const std::string &table, const std::string &field, const Value &value);
-    void setValues(const std::string &table, const RegVector &values);
+    void setValues(const std::string &table, const RegMap &values);
 
     void addToPrototype(const std::string &table, const std::string &field, const Value &value);
-    void addToPrototype(const std::string &table, const RegVector &values);
+    void addToPrototype(const std::string &table, const RegMap &values);
 
     Class *getClass(const std::string &className);
 
