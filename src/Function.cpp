@@ -21,7 +21,7 @@ Function::~Function()
     luaL_unref(m_lua->state(), LUA_REGISTRYINDEX, m_ref);
 }
 
-void Function::call(const ValueVector &values)
+void Function::call(const ValueVec &values)
 {
     lua_rawgeti(m_lua->state(), LUA_REGISTRYINDEX, m_ref);
     lua_rawgeti(m_lua->state(), LUA_REGISTRYINDEX, m_object->getRef());

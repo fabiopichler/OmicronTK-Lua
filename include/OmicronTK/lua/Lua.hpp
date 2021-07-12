@@ -52,33 +52,33 @@ public:
     bool executeFile(const std::string &fileName);
     bool execute(const std::string &script);
 
-    void createTable(const std::string &name, const RegMap &values = {});
+    void createTable(const std::string &name, const ValueMap &values = {});
 
     void setValue(const std::string &global, const Value &value);
     void setValue(const std::string &table, const std::string &field, const Value &value);
-    void setValues(const std::string &table, const RegMap &values);
+    void setValues(const std::string &table, const ValueMap &values);
 
     void addToPrototype(const std::string &table, const std::string &field, const Value &value);
-    void addToPrototype(const std::string &table, const RegMap &values);
+    void addToPrototype(const std::string &table, const ValueMap &values);
 
     Class *getClass(const std::string &className);
 
     Value getValue(const std::string &global, ValueType type);
     Value getValue(const std::string &table, const std::string &field, ValueType type);
 
-    void callFunction(const std::string &name, const ValueVector &values = {}, size_t returns = 0);
-    ValueVector callFunction(const std::string &name, const ValueVector &values,
+    void callFunction(const std::string &name, const ValueVec &values = {}, size_t returns = 0);
+    ValueVec callFunction(const std::string &name, const ValueVec &values,
                                 const std::vector<ValueType> &returns);
 
     void callTableFunction(const std::string &table, const std::string &field,
-                           const ValueVector &values = {}, size_t returns = 0);
-    ValueVector callTableFunction(const std::string &table, const std::string &field,
-                                     const ValueVector &values, const std::vector<ValueType> &returns);
+                           const ValueVec &values = {}, size_t returns = 0);
+    ValueVec callTableFunction(const std::string &table, const std::string &field,
+                                     const ValueVec &values, const std::vector<ValueType> &returns);
 
     void callObjectMethod(const std::string &table, const std::string &field,
-                          const ValueVector &values = {}, size_t returns = 0);
-    ValueVector callObjectMethod(const std::string &table, const std::string &field,
-                                    const ValueVector &values, const std::vector<ValueType> &returns);
+                          const ValueVec &values = {}, size_t returns = 0);
+    ValueVec callObjectMethod(const std::string &table, const std::string &field,
+                                    const ValueVec &values, const std::vector<ValueType> &returns);
 
     void addDirPath(const std::string &path);
 

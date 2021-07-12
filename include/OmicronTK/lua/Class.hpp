@@ -13,7 +13,7 @@ public:
     Class(Lua *lua, int ref);
     ~Class();
 
-    Object *callConstructor(const ValueVector &values = {});
+    Object *callConstructor(const ValueVec &values = {});
 
 private:
     int m_ref;

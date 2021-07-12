@@ -13,7 +13,7 @@ public:
     Function(Lua *lua, Object *object, int ref);
     ~Function();
 
-    void call(const ValueVector &values = {});
+    void call(const ValueVec &values = {});
 
 private:
     int m_ref;

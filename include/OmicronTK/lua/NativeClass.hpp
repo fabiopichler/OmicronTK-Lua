@@ -14,13 +14,13 @@ class NativeClass
 public:
     explicit NativeClass(Lua &lua, const std::string &name);
 
-    void setStatics(const RegMap &statics);
+    void setStatics(const ValueMap &statics);
     void addStatic(const std::string &field, const Value &value);
 
-    void setMembers(const RegMap &members);
+    void setMembers(const ValueMap &members);
     void addMember(const std::string &field, const Value &value);
 
-    void setMetamethods(const RegMap &metamethods);
+    void setMetamethods(const ValueMap &metamethods);
     void addMetamethod(const std::string &field, const Value &value);
 
     void addConstructor(const Value &constructor);
@@ -55,9 +55,9 @@ public:
 private:
     Lua &m_lua;
     std::string m_name;
-    RegMap m_statics;
-    RegMap m_members;
-    RegMap m_metamethods;
+    ValueMap m_statics;
+    ValueMap m_members;
+    ValueMap m_metamethods;
 };
 
 }

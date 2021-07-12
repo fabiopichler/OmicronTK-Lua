@@ -11,7 +11,7 @@ NativeClass::NativeClass(Lua &lua, const std::string &name)
     : m_lua(lua)
     , m_name(name) {}
 
-void NativeClass::setStatics(const RegMap &statics)
+void NativeClass::setStatics(const ValueMap &statics)
 {
     m_statics = statics;
 }
@@ -21,7 +21,7 @@ void NativeClass::addStatic(const std::string &field, const Value &value)
     m_statics[field] = value;
 }
 
-void NativeClass::setMembers(const RegMap &members)
+void NativeClass::setMembers(const ValueMap &members)
 {
     m_members = members;
 }
@@ -31,7 +31,7 @@ void NativeClass::addMember(const std::string &field, const Value &value)
     m_members[field] = value;
 }
 
-void NativeClass::setMetamethods(const RegMap &metamethods)
+void NativeClass::setMetamethods(const ValueMap &metamethods)
 {
     m_metamethods = metamethods;
 }

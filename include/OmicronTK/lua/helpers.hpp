@@ -5,12 +5,12 @@
 namespace OmicronTK {
 namespace lua {
 
-void LuaRegVector_forEach(lua_State *L, const RegMap &values);
+void LuaRegVector_forEach(lua_State *L, const ValueMap &values);
 
-void pcall(lua_State *state, const std::string &name, const ValueVector &values, size_t returnsSize);
+void pcall(lua_State *state, const std::string &name, const ValueVec &values, size_t returnsSize);
 void pcallTable(lua_State *state, bool isObject, const std::string &table, const std::string &field,
-                const ValueVector &values, size_t returnsSize);
-ValueVector pcallReturn(lua_State *state, const std::vector<ValueType> &returns);
+                const ValueVec &values, size_t returnsSize);
+ValueVec pcallReturn(lua_State *state, const std::vector<ValueType> &returns);
 
 Value toValue(lua_State *state, ValueType type, uint32_t idx);
 

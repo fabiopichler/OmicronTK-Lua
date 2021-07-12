@@ -222,9 +222,8 @@ private:
     };
 };
 
-using ValueVector = std::vector<Value>;
-
-using RegMap = std::map<std::string, Value>;
+using ValueVec = std::vector<Value>;
+using ValueMap = std::map<std::string, Value>;
 
 }
 }

@@ -84,7 +84,7 @@ bool Lua::execute(const std::string &script)
     return false;
 }
 
-void Lua::createTable(const std::string &name, const RegMap &values)
+void Lua::createTable(const std::string &name, const ValueMap &values)
 {
     lua_newtable(m_state);
     LuaRegVector_forEach(m_state, values);
@@ -102,7 +102,7 @@ void Lua::setValue(const std::string &table, const std::string &field, const Val
     setValues(table, { {field.c_str(), value} });
 }
 
-void Lua::setValues(const std::string &table, const RegMap &values)
+void Lua::setValues(const std::string &table, const ValueMap &values)
 {
     lua_getglobal(m_state, table.c_str());
     LuaRegVector_forEach(m_state, values);
@@ -114,7 +114,7 @@ void Lua::addToPrototype(const std::string &table, const std::string &field, con
     addToPrototype(table, { {field.c_str(), value} });
 }
 
-void Lua::addToPrototype(const std::string &table, const RegMap &values)
+void Lua::addToPrototype(const std::string &table, const ValueMap &values)
 {
     lua_getglobal(m_state, table.c_str());
     lua_getfield(m_state, -1, "proto");
@@ -160,12 +160,12 @@ Value Lua::getValue(const std::string &table, const std::string &field, ValueTyp
     return value;
 }
 
-void Lua::callFunction(const std::string &name, const ValueVector &values, size_t returns)
+void Lua::callFunction(const std::string &name, const ValueVec &values, size_t returns)
 {
     pcall(m_state, name, values, returns);
 }
 
-ValueVector Lua::callFunction(const std::string &name, const ValueVector &values,
+ValueVec Lua::callFunction(const std::string &name, const ValueVec &values,
                                  const std::vector<ValueType> &returns)
 {
     pcall(m_state, name, values, returns.size());
@@ -173,26 +173,26 @@ ValueVector Lua::callFunction(const std::string &name, const ValueVector &values
 }
 
 void Lua::callTableFunction(const std::string &table, const std::string &field,
-                            const ValueVector &values, size_t returns)
+                            const ValueVec &values, size_t returns)
 {
     pcallTable(m_state, false, table, field, values, returns);
 }
 
-ValueVector Lua::callTableFunction(const std::string &table, const std::string &field,
-                                 const ValueVector &values, const std::vector<ValueType> &returns)
+ValueVec Lua::callTableFunction(const std::string &table, const std::string &field,
+                                 const ValueVec &values, const std::vector<ValueType> &returns)
 {
     pcallTable(m_state, false, table, field, values, returns.size());
     return pcallReturn(m_state, returns);
 }
 
 void Lua::callObjectMethod(const std::string &table, const std::string &field,
-                           const ValueVector &values, size_t returns)
+                           const ValueVec &values, size_t returns)
 {
     pcallTable(m_state, true, table, field, values, returns);
 }
 
-ValueVector Lua::callObjectMethod(const std::string &table, const std::string &field,
-                                const ValueVector &values, const std::vector<ValueType> &returns)
+ValueVec Lua::callObjectMethod(const std::string &table, const std::string &field,
+                                const ValueVec &values, const std::vector<ValueType> &returns)
 {
     pcallTable(m_state, false, table, field, values, returns.size());
     return pcallReturn(m_state, returns);

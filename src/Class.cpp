@@ -21,7 +21,7 @@ Class::~Class()
     luaL_unref(m_lua->state(), LUA_REGISTRYINDEX, m_ref);
 }
 
-Object *Class::callConstructor(const ValueVector &values)
+Object *Class::callConstructor(const ValueVec &values)
 {
     lua_rawgeti(m_lua->state(), LUA_REGISTRYINDEX, m_ref);
     lua_getfield(m_lua->state(), -1, "new");

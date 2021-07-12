@@ -6,7 +6,7 @@
 namespace OmicronTK {
 namespace lua {
 
-void LuaRegVector_forEach(lua_State *L, const RegMap &values)
+void LuaRegVector_forEach(lua_State *L, const ValueMap &values)
 {
     for (const auto &value : values)
     {
@@ -15,7 +15,7 @@ void LuaRegVector_forEach(lua_State *L, const RegMap &values)
     }
 }
 
-void pcall(lua_State *state, const std::string &name, const ValueVector &values, size_t returnsSize)
+void pcall(lua_State *state, const std::string &name, const ValueVec &values, size_t returnsSize)
 {
     lua_getglobal(state, name.c_str());
 
@@ -26,7 +26,7 @@ void pcall(lua_State *state, const std::string &name, const ValueVector &values,
 }
 
 void pcallTable(lua_State *state, bool isObject, const std::string &table, const std::string &field,
-                const ValueVector &values, size_t returnsSize)
+                const ValueVec &values, size_t returnsSize)
 {
     lua_getglobal(state, table.c_str());
     lua_getfield(state, -1, field.c_str());
@@ -49,9 +49,9 @@ void pcallTable(lua_State *state, bool isObject, const std::string &table, const
     lua_pcall(state, valuesSize, returnsSize, 0);
 }
 
-ValueVector pcallReturn(lua_State *state, const std::vector<ValueType> &returns)
+ValueVec pcallReturn(lua_State *state, const std::vector<ValueType> &returns)
 {
-    ValueVector valueVector;
+    ValueVec valueVector;
 
     for (size_t idx = 0; idx < returns.size(); ++idx)
         valueVector.push_back(toValue(state, returns[idx], idx + 1));
