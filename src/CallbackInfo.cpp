@@ -16,7 +16,13 @@ CallbackInfo::ReturnValue::ReturnValue(lua_State *L)
 
 void CallbackInfo::ReturnValue::add(const Value &value)
 {
-    pushValue(m_state, value);
+    lua::pushValue(m_state, value);
+    ++m_length;
+}
+
+void CallbackInfo::ReturnValue::pushValue(int idx)
+{
+    lua_pushvalue(m_state, idx);
     ++m_length;
 }
 

@@ -17,6 +17,7 @@ public:
         inline int length() const { return m_length; }
 
         void add(const Value &value);
+        void pushValue(int idx);
 
     private:
         lua_State *m_state;
