@@ -14,15 +14,21 @@ CallbackInfo::ReturnValue::ReturnValue(lua_State *L)
 {
 }
 
-void CallbackInfo::ReturnValue::add(const Value &value)
+void CallbackInfo::ReturnValue::pushValue(const Value &value)
 {
     lua::pushValue(m_state, value);
     ++m_length;
 }
 
-void CallbackInfo::ReturnValue::pushValue(int idx)
+void CallbackInfo::ReturnValue::pushStackValue(int idx)
 {
     lua_pushvalue(m_state, idx);
+    ++m_length;
+}
+
+void CallbackInfo::ReturnValue::pushNil()
+{
+    lua_pushnil(m_state);
     ++m_length;
 }
 
