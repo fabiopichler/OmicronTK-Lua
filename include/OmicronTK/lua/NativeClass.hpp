@@ -1,5 +1,6 @@
 #pragma once
 
+#include "OmicronTK/lua/global.h"
 #include "OmicronTK/lua/Value.hpp"
 #include <OmicronTK/lua/Callback.hpp>
 
@@ -9,7 +10,7 @@ namespace OmicronTK {
 namespace lua {
 
 class Lua;
-class NativeClass
+class OTKLUA_EXPORT NativeClass
 {
 public:
     explicit NativeClass(Lua &lua, const std::string &name);

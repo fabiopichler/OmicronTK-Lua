@@ -1,15 +1,16 @@
 #pragma once
 
+#include "OmicronTK/lua/global.h"
 #include "OmicronTK/lua/defines.hpp"
 #include <OmicronTK/lua/Value.hpp>
 
 namespace OmicronTK {
 namespace lua {
 
-class CallbackInfo
+class OTKLUA_EXPORT CallbackInfo
 {
 public:
-    class ReturnValue
+    class OTKLUA_EXPORT ReturnValue
     {
         ReturnValue(lua_State *L);
 

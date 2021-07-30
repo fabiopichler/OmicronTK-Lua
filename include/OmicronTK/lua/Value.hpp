@@ -2,6 +2,7 @@
 
 #include <map>
 
+#include "OmicronTK/lua/global.h"
 #include "OmicronTK/lua/defines.hpp"
 
 namespace OmicronTK {
@@ -97,7 +98,7 @@ struct __ValueType<UserData>
     using type = void *;
 };
 
-class Value
+class OTKLUA_EXPORT Value
 {
     template<const ValueType type, const ValueType expected, typename _Tp>
     using _enable_if = typename std::enable_if<type == expected, _Tp>::type;

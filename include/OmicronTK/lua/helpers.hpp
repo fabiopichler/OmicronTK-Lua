@@ -1,5 +1,6 @@
 #pragma once
 
+#include "OmicronTK/lua/global.h"
 #include "OmicronTK/lua/Value.hpp"
 
 namespace OmicronTK {

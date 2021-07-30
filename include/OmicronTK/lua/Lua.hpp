@@ -29,10 +29,9 @@
 
 #pragma once
 
-#include "global.h"
-
 #include <string>
 
+#include "OmicronTK/lua/global.h"
 #include "OmicronTK/lua/defines.hpp"
 #include "OmicronTK/lua/Value.hpp"
 

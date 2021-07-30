@@ -2,12 +2,14 @@
 
 #include <string>
 
+#include "OmicronTK/lua/global.h"
+
 namespace OmicronTK {
 namespace lua {
 
 class Lua;
 class Function;
-class Object
+class OTKLUA_EXPORT Object
 {
 public:
     Object(Lua *lua, int ref);

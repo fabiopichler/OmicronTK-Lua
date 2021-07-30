@@ -64,7 +64,7 @@ set(SRC_FILES
     src/Function.cpp)
 
 if(WIN32)
-    set(SRC_FILES ${SRC_FILES} rc/lua.rc)
+    #set(SRC_FILES ${SRC_FILES} rc/lua.rc)
 endif()
 
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})

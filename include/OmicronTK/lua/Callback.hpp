@@ -1,11 +1,12 @@
 #pragma once
 
+#include "OmicronTK/lua/global.h"
 #include <OmicronTK/lua/CallbackInfo.hpp>
 
 namespace OmicronTK {
 namespace lua {
 
-class Callback
+class OTKLUA_EXPORT Callback
 {
 public:
     template<void (*func)(CallbackInfo &info)>

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "OmicronTK/lua/global.h"
 #include "OmicronTK/lua/Value.hpp"
 
 namespace OmicronTK {
@@ -7,7 +8,7 @@ namespace lua {
 
 class Lua;
 class Object;
-class Function
+class OTKLUA_EXPORT Function
 {
 public:
     Function(Lua *lua, Object *object, int ref);
