@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 set(PROJECT_NAME OmicronTK_lua)
 project(${PROJECT_NAME} LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -17,8 +17,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/lib)
 option(USE_CUSTOM_LUA "Use a custom Lua build" OFF)
 option(USE_LUAJIT "Use LuaJIT" ON)
 
-if(EXISTS "${CMAKE_SOURCE_DIR}/.env.cmake")
-    include("${CMAKE_SOURCE_DIR}/.env.cmake")
+if(EXISTS "${CMAKE_SOURCE_DIR}/env.cmake")
+    include("${CMAKE_SOURCE_DIR}/env.cmake")
 
 elseif(USE_CUSTOM_LUA)
     set(LUA_INCLUDE_DIR "" CACHE STRING "Lua include directory")

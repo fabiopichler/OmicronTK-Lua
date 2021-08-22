@@ -93,12 +93,6 @@ public:
         return static_cast<T *>(getValue(table, field, lua::UserData).userdata_value());
     }
 
-    template<typename LuaClass>
-    inline void require()
-    {
-        LuaClass::require(this);
-    }
-
 private:
     lua_State *m_state;
 };

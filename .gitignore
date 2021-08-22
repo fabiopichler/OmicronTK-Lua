@@ -3,6 +3,6 @@
 .directory
 /cmake-build*
 /build*
-.env.cmake
+env.cmake
 /lib/*
 !/lib/.gitignore
