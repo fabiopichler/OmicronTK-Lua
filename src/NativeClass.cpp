@@ -7,9 +7,10 @@
 namespace OmicronTK {
 namespace lua {
 
-NativeClass::NativeClass(Lua &lua, const std::string &name)
+NativeClass::NativeClass(Lua &lua, const std::string &name, const std::string &nspace)
     : m_lua(lua)
-    , m_name(name) {}
+    , m_name(name)
+    , m_nspace(nspace) {}
 
 void NativeClass::setStatics(const ValueMap &statics)
 {
@@ -66,7 +67,18 @@ void NativeClass::create()
         lua_pop(state, 1);
     }
 
-    lua_setglobal(state, m_name.c_str());
+    if (m_nspace.empty())
+    {
+        lua_setglobal(state, m_name.c_str());
+    }
+    else
+    {
+        lua_getglobal(state, m_nspace.c_str());
+        lua_pushvalue(state, -2);
+        lua_setfield(state, -2, m_name.c_str());
+        lua_pop(state, 1);
+    }
+
     luaL_newmetatable(state, m_name.c_str());
 
     lua_pushvalue(state, -1);

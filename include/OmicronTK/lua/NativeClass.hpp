@@ -13,7 +13,7 @@ class Lua;
 class OTKLUA_EXPORT NativeClass
 {
 public:
-    explicit NativeClass(Lua &lua, const std::string &name);
+    explicit NativeClass(Lua &lua, const std::string &name, const std::string &nspace = std::string());
 
     void setStatics(const ValueMap &statics);
     void addStatic(const std::string &field, const Value &value);
@@ -56,6 +56,7 @@ public:
 private:
     Lua &m_lua;
     std::string m_name;
+    std::string m_nspace;
     ValueMap m_statics;
     ValueMap m_members;
     ValueMap m_metamethods;
