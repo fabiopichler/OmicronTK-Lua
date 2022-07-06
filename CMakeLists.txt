@@ -61,7 +61,9 @@ set(SRC_FILES
     include/OmicronTK/lua/Object.hpp
     src/Object.cpp
     include/OmicronTK/lua/Function.hpp
-    src/Function.cpp)
+    src/Function.cpp
+    include/OmicronTK/lua/Persistent.hpp
+    src/Persistent.cpp)
 
 if(WIN32)
     #set(SRC_FILES ${SRC_FILES} rc/lua.rc)
