@@ -55,6 +55,7 @@ public:
 
     void *checkUserData(int idx, const char *className) const;
     void newUserData(int idx, void *userdata, const Value &gc = Value()) const;
+    void removeGCFromUserData(int idx);
 
     template<typename T>
     inline T *getLightUserData(int idx) const

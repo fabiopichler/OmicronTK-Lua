@@ -225,8 +225,16 @@ void CallbackInfo::newUserData(int idx, void *userdata, const Value &gc) const
     }
 
     lua_setmetatable(m_state, -2);
-
     lua_setfield(m_state, idx, "__userdata");
+}
+
+void CallbackInfo::removeGCFromUserData(int idx)
+{
+    lua_getfield(m_state, idx, "__userdata");
+    lua_getmetatable(m_state, -1);
+    lua_pushnil(m_state);
+    lua_setfield(m_state, -2, "__gc");
+    lua_pop(m_state, 2);
 }
 
 }
