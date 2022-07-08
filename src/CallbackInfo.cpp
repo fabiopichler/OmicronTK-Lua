@@ -212,12 +212,18 @@ void *CallbackInfo::checkUserData(int idx, const char *className) const
     return *static_cast<void **>(luaL_checkudata(m_state, -1, className));
 }
 
-void CallbackInfo::newUserData(int idx, const char *className, void *userdata) const
+void CallbackInfo::newUserData(int idx, void *userdata, const Value &gc) const
 {
     *static_cast<void **>(lua_newuserdata(m_state, sizeof(void *))) = userdata;
 
-    //luaL_setmetatable(m_state, className);
-    lua_getfield(m_state, LUA_REGISTRYINDEX, className);
+    lua_newtable(m_state);
+
+    if (gc.type() == ValueType::CFunction)
+    {
+        lua_pushcfunction(m_state, gc.cfunction_value());
+        lua_setfield(m_state, -2, "__gc");
+    }
+
     lua_setmetatable(m_state, -2);
 
     lua_setfield(m_state, idx, "__userdata");

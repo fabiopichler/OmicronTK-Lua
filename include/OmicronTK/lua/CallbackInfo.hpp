@@ -54,7 +54,7 @@ public:
     void *getUserData(int idx, void *defaultValue = nullptr) const;
 
     void *checkUserData(int idx, const char *className) const;
-    void newUserData(int idx, const char *className, void *userdata) const;
+    void newUserData(int idx, void *userdata, const Value &gc = Value()) const;
 
     template<typename T>
     inline T *getLightUserData(int idx) const

@@ -21,24 +21,14 @@ public:
     void setMembers(const ValueMap &members);
     void addMember(const std::string &field, const Value &value);
 
-    void setMetamethods(const ValueMap &metamethods);
-    void addMetamethod(const std::string &field, const Value &value);
-
-    void addConstructor(const Value &constructor);
-    void addDestructor(const Value &__gc);
+    void setConstructor(const Value &constructor);
 
     void create();
 
     template<void (*value)(CallbackInfo &info)>
-    inline void addConstructor()
+    inline void setConstructor()
     {
-        addConstructor(&Callback::luaCallback<value>);
-    }
-
-    template<void (*value)(CallbackInfo &info)>
-    inline void addDestructor()
-    {
-        addDestructor(&Callback::luaCallback<value>);
+        setConstructor(&Callback::luaCallback<value>);
     }
 
     template<void (*value)(CallbackInfo &info)>
@@ -59,7 +49,6 @@ private:
     std::string m_nspace;
     ValueMap m_statics;
     ValueMap m_members;
-    ValueMap m_metamethods;
 };
 
 }

@@ -32,24 +32,9 @@ void NativeClass::addMember(const std::string &field, const Value &value)
     m_members[field] = value;
 }
 
-void NativeClass::setMetamethods(const ValueMap &metamethods)
-{
-    m_metamethods = metamethods;
-}
-
-void NativeClass::addMetamethod(const std::string &field, const Value &value)
-{
-    m_metamethods[field] = value;
-}
-
-void NativeClass::addConstructor(const Value &constructor)
+void NativeClass::setConstructor(const Value &constructor)
 {
     m_members["constructor"] = constructor;
-}
-
-void NativeClass::addDestructor(const Value &__gc)
-{
-    m_metamethods["__gc"] = __gc;
 }
 
 void NativeClass::create()
@@ -78,12 +63,6 @@ void NativeClass::create()
         lua_setfield(state, -2, m_name.c_str());
         lua_pop(state, 1);
     }
-
-    luaL_newmetatable(state, m_name.c_str());
-
-    lua_pushvalue(state, -1);
-    lua_setfield(state, -2, "__index");
-    LuaRegVector_forEach(state, m_metamethods);
 
     lua_pop(state, 1);
 }
