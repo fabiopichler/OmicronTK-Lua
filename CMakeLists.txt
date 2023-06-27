@@ -14,11 +14,14 @@ endif()
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/lib/linux64/debug)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/lib/linux64)
 
+option(BUILD_LUA "Build Lua" ON)
 option(USE_CUSTOM_LUA "Use a custom Lua build" OFF)
 option(USE_LUAJIT "Use LuaJIT" ON)
 
-if(EXISTS "${CMAKE_SOURCE_DIR}/env.cmake")
-    include("${CMAKE_SOURCE_DIR}/env.cmake")
+if(BUILD_LUA)
+    set(LUA_INCLUDE_DIR "../third_party/luajit/include")
+    set(LUA_DIRECTORIES "../third_party/lib/linux64")
+    set(LUA_LIBRARIES luajit-5.1)
 
 elseif(USE_CUSTOM_LUA)
     set(LUA_INCLUDE_DIR "" CACHE STRING "Lua include directory")
@@ -70,6 +73,8 @@ if(WIN32)
 endif()
 
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
+
+target_link_directories(${PROJECT_NAME} PRIVATE ${LUA_DIRECTORIES})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LUA_LIBRARIES})
 

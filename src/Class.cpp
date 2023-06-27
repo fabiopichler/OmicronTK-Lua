@@ -3,7 +3,7 @@
 #include "OmicronTK/lua/Object.hpp"
 #include "OmicronTK/lua/helpers.hpp"
 
-#include <lua.hpp>
+#include <lua/lua.hpp>
 
 #include <iostream>
 

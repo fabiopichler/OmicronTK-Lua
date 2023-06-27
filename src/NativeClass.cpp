@@ -2,7 +2,7 @@
 #include "OmicronTK/lua/Lua.hpp"
 #include "OmicronTK/lua/helpers.hpp"
 
-#include <lua.hpp>
+#include <lua/lua.hpp>
 
 namespace OmicronTK {
 namespace lua {
