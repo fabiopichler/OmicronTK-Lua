@@ -50,8 +50,6 @@ endif()
 
 include_directories(include ${LUA_INCLUDE_DIR})
 
-add_definitions(-DOTKLUA_BUILD_CORE_LIB)
-
 set(SRC_FILES
     include/OmicronTK/lua/global.h
     include/OmicronTK/lua/defines.hpp
@@ -87,8 +85,8 @@ endif()
 
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE OTKLUA_BUILD_CORE_LIB)
 target_link_directories(${PROJECT_NAME} PRIVATE ${LUA_DIRECTORIES})
-
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LUA_LIBRARIES})
 
 if(UNIX AND NOT APPLE)
