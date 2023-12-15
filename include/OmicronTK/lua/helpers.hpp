@@ -3,6 +3,8 @@
 #include "OmicronTK/lua/global.h"
 #include "OmicronTK/lua/Value.hpp"
 
+#include <cstdint>
+
 namespace OmicronTK {
 namespace lua {
 
