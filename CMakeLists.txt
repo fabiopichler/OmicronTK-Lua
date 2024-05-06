@@ -20,7 +20,8 @@ else()
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/lib/linux64/debug)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/lib/linux64)
 
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-rpath,\'$ORIGIN\',-z,origin")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS " -Wl,-rpath,\'$ORIGIN\',-z,origin")
+    string(APPEND CMAKE_SHARED_LINKER_FLAGS " -Wl,-rpath,\'$ORIGIN\',-z,origin -Wl,--no-undefined -Wl,--as-needed")
 endif()
 
 option(BUILD_LUA "Build Lua" ON)
