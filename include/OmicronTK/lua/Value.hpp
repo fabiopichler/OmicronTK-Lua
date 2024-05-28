@@ -104,11 +104,9 @@ class OTKLUA_EXPORT Value
     using _enable_if = typename std::enable_if<type == expected, _Tp>::type;
 
 public:
-    Value &operator=(const Value &value);
-
+    Value(); // nil
     Value(const Value &value);
     Value(Value &&value);
-    Value(); // nil
     Value(double value);
     Value(float value);
     Value(int value);
@@ -121,6 +119,9 @@ public:
     Value(bool value);
     Value(void *value);
     ~Value();
+
+    Value &operator=(const Value &value);
+    Value &operator=(Value &&value);
 
     ValueType type() const;
 
