@@ -21,7 +21,7 @@ else()
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/lib/linux64)
 
     string(APPEND CMAKE_EXE_LINKER_FLAGS " -Wl,-rpath,\'$ORIGIN\',-z,origin")
-    string(APPEND CMAKE_SHARED_LINKER_FLAGS " -Wl,-rpath,\'$ORIGIN\',-z,origin -Wl,--no-undefined -Wl,--as-needed")
+    string(APPEND CMAKE_SHARED_LINKER_FLAGS " -Wl,-rpath,\'$ORIGIN\',-z,origin -Wl,--no-undefined")
 endif()
 
 option(BUILD_LUA "Build Lua" ON)
