@@ -12,6 +12,17 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 if(WIN32)
+    set(THIRD_PARTY_PATH ${CMAKE_SOURCE_DIR}/../third_party/prefix-win64)
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
+    set(THIRD_PARTY_PATH ${CMAKE_SOURCE_DIR}/../third_party/prefix-wasm)
+else()
+    set(THIRD_PARTY_PATH ${CMAKE_SOURCE_DIR}/../third_party/prefix-linux64)
+endif()
+
+set(THIRD_PARTY_INCLUDE_PATH ${THIRD_PARTY_PATH}/include)
+set(THIRD_PARTY_LIB_PATH ${THIRD_PARTY_PATH}/lib)
+
+if(WIN32)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin/win64/debug)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/bin/win64)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin/win64/debug)
@@ -29,13 +40,8 @@ option(USE_CUSTOM_LUA "Use a custom Lua build" OFF)
 option(USE_LUAJIT "Use LuaJIT" ON)
 
 if(BUILD_LUA)
-    set(LUA_INCLUDE_DIR "../third_party/luajit/include")
-
-    if(WIN32)
-        set(LUA_DIRECTORIES "../third_party/bin/win64")
-    else()
-        set(LUA_DIRECTORIES "../third_party/lib/linux64")
-    endif()
+    set(LUA_INCLUDE_DIR ${THIRD_PARTY_INCLUDE_PATH})
+    set(LUA_DIRECTORIES ${THIRD_PARTY_LIB_PATH})
 
     set(LUA_LIBRARIES luajit-5.1)
 elseif(USE_CUSTOM_LUA)

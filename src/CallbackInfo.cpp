@@ -1,7 +1,7 @@
 #include "OmicronTK/lua/CallbackInfo.hpp"
 #include <OmicronTK/lua/helpers.hpp>
 
-#include <lua/lua.hpp>
+#include <luajit-2.1/lua.hpp>
 
 #include <stdexcept>
 

@@ -31,7 +31,7 @@
 #include "OmicronTK/lua/helpers.hpp"
 #include "OmicronTK/lua/Class.hpp"
 
-#include <lua/lua.hpp>
+#include <luajit-2.1/lua.hpp>
 #include <iostream>
 
 namespace OmicronTK {
